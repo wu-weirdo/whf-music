@@ -10,8 +10,10 @@ import com.example.yin.service.ListSongService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.util.List;
+import java.util.Objects;
 
 @Service
 public class ListSongServiceImpl extends ServiceImpl<ListSongMapper, ListSong> implements ListSongService {
@@ -48,13 +50,21 @@ public class ListSongServiceImpl extends ServiceImpl<ListSongMapper, ListSong> i
 
     @Override
     public R addListSong(ListSongRequest addListSongRequest) {
-        ListSong listSong = new ListSong();
-        BeanUtils.copyProperties(addListSongRequest, listSong);
-        if (listSongMapper.insert(listSong) > 0) {
+        if (!CollectionUtils.isEmpty(addListSongRequest.getSongIds())) {
+            for (Integer songId : addListSongRequest.getSongIds()) {
+                QueryWrapper<ListSong> queryWrapper = new QueryWrapper<>();
+                queryWrapper.eq("song_id", songId).eq("song_list_id", addListSongRequest.getSongListId());
+                ListSong selected = listSongMapper.selectOne(queryWrapper);
+                if (Objects.isNull(selected)) {
+                    ListSong listSong = new ListSong();
+                    listSong.setSongId(songId);
+                    listSong.setSongListId(addListSongRequest.getSongListId());
+                    listSongMapper.insert(listSong);
+                }
+            }
             return R.success("添加成功");
-        } else {
-            return R.error("添加失败");
         }
+        return R.error("添加失败");
     }
 
     @Override

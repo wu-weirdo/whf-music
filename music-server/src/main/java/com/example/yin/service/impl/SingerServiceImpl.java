@@ -96,7 +96,7 @@ public class SingerServiceImpl extends ServiceImpl<SingerMapper, Singer> impleme
     @Override
     public R singerOfSex(Integer sex) {
         QueryWrapper<Singer> queryWrapper = new QueryWrapper<>();
-        queryWrapper.like("name",sex);
+        queryWrapper.like("sex",sex);
         return R.success(null, singerMapper.selectList(queryWrapper));
     }
 }

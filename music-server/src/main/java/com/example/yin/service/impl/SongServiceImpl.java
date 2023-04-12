@@ -5,16 +5,19 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.yin.common.R;
 import com.example.yin.mapper.SongMapper;
 import com.example.yin.model.domain.Song;
+import com.example.yin.model.reponse.SongIntroductionTreeResponse;
 import com.example.yin.model.request.SongRequest;
 import com.example.yin.service.SongService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Date;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class SongServiceImpl extends ServiceImpl<SongMapper, Song> implements SongService {
@@ -152,5 +155,36 @@ public class SongServiceImpl extends ServiceImpl<SongMapper, Song> implements So
         QueryWrapper<Song> queryWrapper = new QueryWrapper<>();
         queryWrapper.like("name",name);
         return R.success(null, songMapper.selectList(queryWrapper));
+    }
+
+    @Override
+    public R songTreeOfSingerId(int singerId) {
+        List<SongIntroductionTreeResponse> responseList = new ArrayList<>();
+        QueryWrapper<Song> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("singer_id",singerId);
+        List<Song> songs = songMapper.selectList(queryWrapper);
+        if (CollectionUtils.isEmpty(songs)) {
+            return R.success(null, responseList);
+        }
+        Map<String, List<Song>> collect = songs.stream().collect(Collectors.groupingBy(Song::getIntroduction, Collectors.toList()));
+        for (Map.Entry<String, List<Song>> songMap : collect.entrySet()) {
+            SongIntroductionTreeResponse response = new SongIntroductionTreeResponse();
+            response.setValue(songMap.getKey());
+            response.setLabel(songMap.getKey());
+            List<Song> songList = songMap.getValue();
+            if (!CollectionUtils.isEmpty(songList)) {
+                List<SongIntroductionTreeResponse> childrenList = new ArrayList<>();
+                for (Song song : songList) {
+                    SongIntroductionTreeResponse children = new SongIntroductionTreeResponse();
+                    children.setValue(String.valueOf(song.getId()));
+                    children.setLabel(song.getName());
+                    children.setChildren(Collections.emptyList());
+                    childrenList.add(children);
+                }
+                response.setChildren(childrenList);
+            }
+            responseList.add(response);
+        }
+        return R.success(null, responseList);
     }
 }

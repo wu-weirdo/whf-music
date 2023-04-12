@@ -25,4 +25,6 @@ public interface SongService extends IService<Song> {
     R songOfId(Integer id);
 
     R songOfSingerName(String name);
+
+    R songTreeOfSingerId(int singerId);
 }

@@ -11,7 +11,7 @@
       <el-input v-model="searchWord" placeholder="筛选关键词"></el-input>
       <el-button type="primary" @click="centerDialogVisible = true">添加歌曲</el-button>
     </div>
-    <el-table height="550px" border size="small" :data="tableData" @selection-change="handleSelectionChange">
+    <el-table height="680px" border size="16" :data="tableData" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="40" align="center"></el-table-column>
       <el-table-column label="ID" prop="id" width="50" align="center"></el-table-column>
       <el-table-column label="歌手-歌曲" prop="name"></el-table-column>
@@ -24,8 +24,8 @@
   </div>
 
   <!--添加歌曲-->
-  <el-dialog title="添加歌曲" v-model="centerDialogVisible">
-    <el-form label-width="80px" :model="registerForm">
+  <el-dialog title="添加歌曲" v-model="centerDialogVisible" width="30%">
+    <el-form label-width="180px" :model="registerForm">
       <el-form-item prop="singerName" label="歌手名字">
         <el-select v-model="registerForm.singerName" placeholder="请选择" @change="chooseSinger">
           <el-option
@@ -35,21 +35,25 @@
               :value="item.value">
           </el-option>
         </el-select>
-<!--        <el-input v-model="registerForm.singerName"></el-input>-->
       </el-form-item>
       <el-form-item prop="songName" label="歌曲名字">
-<!--        <el-input v-model="registerForm.songName"></el-input>-->
         <el-cascader
-            v-model="registerForm.songName"
-            :options="options"
-            :props="{ expandTrigger: 'hover' }"
-            ></el-cascader>
+            v-model="registerForm.songIds"
+            :options="songList"
+            :props="{ expandTrigger: 'hover', multiple: true }"
+            placeholder="请选择"
+            :show-all-levels="false"
+            @change="chooseSong"
+        ></el-cascader>
       </el-form-item>
     </el-form>
     <template #footer>
       <span class="dialog-footer">
-        <el-button @click="centerDialogVisible = false">取 消</el-button>
-        <el-button type="primary" @click="saveSong">确 定</el-button>
+        <el-button @click="centerDialogVisible = false;
+        registerForm.singerName = '';
+        registerForm.songIds = [];
+        songList.length = 0">取 消</el-button>
+        <el-button type="primary" @click="addSong">确 定</el-button>
       </span>
     </template>
   </el-dialog>
@@ -59,9 +63,9 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, getCurrentInstance, watch, ref, reactive, computed } from "vue";
-import { useStore } from "vuex";
-import { HttpManager } from "@/api";
+import {defineComponent, getCurrentInstance, watch, ref, reactive, computed} from "vue";
+import {useStore} from "vuex";
+import {HttpManager} from "@/api";
 import YinDelDialog from "@/components/dialog/YinDelDialog.vue";
 
 export default defineComponent({
@@ -69,7 +73,7 @@ export default defineComponent({
     YinDelDialog,
   },
   setup() {
-    const { proxy } = getCurrentInstance();
+    const {proxy} = getCurrentInstance();
     const store = useStore();
 
     const tableData = ref([]); // 记录歌曲，用于显示
@@ -110,29 +114,24 @@ export default defineComponent({
     const centerDialogVisible = ref(false);
     const registerForm = reactive({
       singerName: "",
-      songName: "",
+      songIds: [],
     });
 
-    // 获取要添加歌曲的ID
-    async function saveSong() {
-      const id = `${registerForm.singerName}-${registerForm.songName}`;
-      const result = (await HttpManager.getSongOfSingerName(id)) as ResponseBody;
-
-      if (result.success) {
-        addSong(result.data[0].id);
-      }
-    }
-    async function addSong(id) {
-      let songId = id;
+    async function addSong() {
+      let songId = null;
+      let songIds = registerForm.songIds;
       let songListId = proxy.$route.query.id as string;
 
-      const result = (await HttpManager.setListSong({songId,songListId})) as ResponseBody;
+      const result = (await HttpManager.setListSong({songId, songIds, songListId})) as ResponseBody;
       (proxy as any).$message({
         message: result.message,
         type: result.type,
       });
 
       if (result.success) getData();
+      registerForm.singerName = '';
+      registerForm.songIds = [];
+      songList.length = 0;
       centerDialogVisible.value = false;
     }
 
@@ -153,13 +152,16 @@ export default defineComponent({
       if (result.success) getData();
       delVisible.value = false;
     }
+
     function deleteRow(id) {
       idx.value = id;
       delVisible.value = true;
     }
+
     function handleSelectionChange(val) {
       multipleSelection.value = val;
     }
+
     function deleteAll() {
       for (let item of multipleSelection.value) {
         deleteRow(item.id);
@@ -168,21 +170,39 @@ export default defineComponent({
       multipleSelection.value = [];
     }
 
-    const singerList = []; // 记录当前要删除的行
+    const singerList = []; // 歌手列表
     getSingerList();
+
     async function getSingerList() {
       const result = (await HttpManager.getAllSinger()) as ResponseBody;
-      console.log(result.data);
       for (let item of result.data) {
-        let singer = {"value": item.name, "label" : item.name};
+        let singer = {"value": item.id, "label": item.name};
         singerList.push(singer);
       }
     }
 
     function chooseSinger(value) {
-      console.log(value);
-      alert(value);
+      getSongList(value);
     }
+
+    const songList = reactive([]);//歌曲列表
+    function getSongList(id) {
+      songList.length = 0;
+      HttpManager.getSongTreeOfSingerId(id).then((res) => {
+        const result = res as ResponseBody;
+        for (let item of result.data) {
+          songList.push(item);
+        }
+      });
+    }
+
+    function chooseSong(value: Array<number|string>) {
+      registerForm.songIds = [];
+      for (let item of value) {
+        registerForm.songIds.push(item[1]);
+      }
+    }
+
     return {
       searchWord,
       tableData,
@@ -194,12 +214,19 @@ export default defineComponent({
       handleSelectionChange,
       deleteRow,
       confirm,
-      saveSong,
       singerList,
+      songList,
       chooseSinger,
+      addSong,
+      chooseSong,
     };
   },
 });
 </script>
 
-<style scoped></style>
+<style scoped>
+  ul, li {
+    list-style: none;
+    display: block;
+  }
+</style>
