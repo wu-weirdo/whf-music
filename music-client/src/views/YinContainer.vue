@@ -11,7 +11,7 @@
       <yin-audio></yin-audio>
     </el-main>
     <el-footer>
-      <yin-footer></yin-footer>
+<!--      <yin-footer></yin-footer>-->
     </el-footer>
   </el-container>
 </template>

@@ -59,10 +59,30 @@ export default function () {
     return extension && isLt10M;
   }
 
+  function beforeVideoUpload(file) {
+    const ltCode = 1;
+    const isLt1G = file.size / 1024 / 1024 /1024 < ltCode;
+    const testmsg = file.name.substring(file.name.lastIndexOf(".") + 1);
+    const extension = testmsg === "mp4";
+
+    if (!extension) {
+      (proxy as any).$message({
+        message: "上传文件只能是mp4格式！",
+        type: "error",
+      });
+    }
+    if (!isLt1G) {
+      (proxy as any).$message.error(`上传视频大小不能超过 ${ltCode}GB!`);
+    }
+
+    return extension && isLt1G;
+  }
+
   // 路由管理
   function routerManager(routerName: string | number, options: routerOptions) {
     switch (routerName) {
       case RouterName.Song:
+      case RouterName.Video:
       case RouterName.ListSong:
       case RouterName.Comment:
       case RouterName.Consumer:
@@ -86,5 +106,5 @@ export default function () {
     proxy.$router.go(step);
   }
 
-  return { changeSex, routerManager, goBack, beforeImgUpload, beforeSongUpload };
+  return { changeSex, routerManager, goBack, beforeImgUpload, beforeSongUpload, beforeVideoUpload };
 }

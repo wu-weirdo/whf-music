@@ -5,7 +5,7 @@
       <el-input v-model="searchWord" placeholder="筛选关键词"></el-input>
       <el-button type="primary" @click="centerDialogVisible = true">添加歌单</el-button>
     </div>
-    <el-table height="550px" border size="small" :data="data" @selection-change="handleSelectionChange">
+    <el-table height="680px" border size="16" :data="data" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="40" align="center"></el-table-column>
       <el-table-column label="ID" prop="id" width="50" align="center"></el-table-column>
       <el-table-column label="歌单图片" width="110" align="center">
@@ -20,33 +20,28 @@
       <el-table-column prop="title" label="标题" width="200"></el-table-column>
       <el-table-column label="简介">
         <template v-slot="scope">
-          <p style="height: 100px; overflow: scroll">
-            {{ scope.row.introduction }}
-          </p>
+          {{ scope.row.introduction }}
         </template>
       </el-table-column>
-      <el-table-column label="风格" prop="style" width="100"></el-table-column>
-      <el-table-column label="内容" width="90" align="center">
+      <el-table-column label="风格" prop="style" width="100" align="center"></el-table-column>
+      <el-table-column label="操作" width="180" align="center">
         <template v-slot="scope">
-          <el-button @click="goContentPage(scope.row.id)">内容</el-button>
-        </template>
-      </el-table-column>
-      <el-table-column label="评论" width="90" align="center">
-        <template v-slot="scope">
-          <el-button @click="goCommentPage(scope.row.id)">评论</el-button>
-        </template>
-      </el-table-column>
-      <el-table-column label="操作" width="160" align="center">
-        <template v-slot="scope">
-          <el-button @click="editRow(scope.row)">编辑</el-button>
-          <el-button type="danger" @click="deleteRow(scope.row.id)">删除</el-button>
+          <el-row style="margin-bottom: 10px">
+            <el-button type="success" @click="goContentPage(scope.row.id)">歌曲</el-button>
+            <el-button @click="goCommentPage(scope.row.id)">评论</el-button>
+          </el-row>
+
+          <el-row>
+            <el-button type="primary" @click="editRow(scope.row)">编辑</el-button>
+            <el-button type="danger" @click="deleteRow(scope.row.id)">删除</el-button>
+          </el-row>
         </template>
       </el-table-column>
     </el-table>
     <el-pagination
         class="pagination"
         background
-        layout="total, prev, pager, next"
+        layout="prev, pager, next"
         :current-page="currentPage"
         :page-size="pageSize"
         :total="tableData.length"
@@ -56,13 +51,13 @@
   </div>
 
   <!--添加歌单-->
-  <el-dialog title="添加歌单" v-model="centerDialogVisible">
+  <el-dialog title="添加歌单" v-model="centerDialogVisible" width="600px">
     <el-form label-width="70px" :model="registerForm">
       <el-form-item label="歌单名" prop="title">
         <el-input v-model="registerForm.title"></el-input>
       </el-form-item>
       <el-form-item label="歌单介绍" prop="introduction">
-        <el-input v-model="registerForm.introduction"></el-input>
+        <el-input v-model="registerForm.introduction" type="textarea" :rows="4"></el-input>
       </el-form-item>
       <el-form-item label="风格" prop="style">
         <el-input v-model="registerForm.style"></el-input>

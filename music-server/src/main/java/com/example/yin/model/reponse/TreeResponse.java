@@ -10,11 +10,11 @@ import java.util.List;
  * @date 2023/4/11
  */
 @Data
-public class SongIntroductionTreeResponse implements Serializable {
+public class TreeResponse implements Serializable {
 
     private String value;
 
     private String label;
 
-    private List<SongIntroductionTreeResponse> children;
+    private List<TreeResponse> children;
 }

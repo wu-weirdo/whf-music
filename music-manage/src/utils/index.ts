@@ -10,13 +10,16 @@ export function getBirth(cellValue) {
 
 // 解析歌词
 export function parseLyric(text) {
-  const lines = text.split("\n");
+  let lines = text.split("\r\n");
+  if (lines.length <= 1) {
+    lines = text.split("\n");
+  }
   const pattern = /\[\d{2}:\d{2}.(\d{3}|\d{2})\]/g;
   const result = [];
 
   // 对于歌词格式不对的特殊处理
   if (!/\[.+\]/.test(text)) {
-    return [text];
+    return lines;
   }
   for (const item of lines) {
     if (pattern.test(item)) {

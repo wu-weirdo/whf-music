@@ -57,6 +57,8 @@ const HttpManager = {
     getAllSong: () => get(`song`),
     // 返回指定歌手ID的歌曲
     getSongOfSingerId: (id) => get(`song/singer/detail?singerId=${id}`),
+    // 返回指定歌手ID的歌曲树
+    getSongTreeOfSingerId: (id) => get(`song/singer/detail/tree?singerId=${id}`),
     // 返回的指定用户ID收藏列表
     getSongOfId: (id) => get(`song/detail?id=${id}`),
     // 返回指定歌手名的歌曲
@@ -86,12 +88,28 @@ const HttpManager = {
 
     // =======================> 歌单歌曲 API 完成
     // 给歌单添加歌曲
-    setListSong: ({songId,songListId}) => post(`listSong/add`, {songId,songListId}),
+    setListSong: ({songId, songIds, songListId}) => post(`listSong/add`, {songId, songIds, songListId}),
     // 返回歌单里指定歌单ID的歌曲
     getListSongOfSongId: (songListId) => get(`listSong/detail?songListId=${songListId}`),
     // 删除歌单里的歌曲
-    deleteListSong: (songId) => get(`listSong/delete?songId=${songId}`)
+    deleteListSong: (songId) => get(`listSong/delete?songId=${songId}`),
 
+    // 获取视频列表
+    getVideoList: ({singerId, name}) => post(`video/list`, {
+        singerId,
+        name,
+    }),
+    updateVideoImg: (id) => `${getBaseURL()}/video/img/update?id=${id}`,
+    // 更新视频信息
+    updateVideoMsg: ({id, singerId, name, introduction}) => post(`video/update`, {
+        id,
+        singerId,
+        name,
+        introduction
+    }),
+    // 删除视频
+    deleteVideo: (id) => deletes(`video/delete?id=${id}`),
+    updateVideoUrl: (id) => `${getBaseURL()}/video/url/update?id=${id}`,
 }
 
 export {HttpManager}

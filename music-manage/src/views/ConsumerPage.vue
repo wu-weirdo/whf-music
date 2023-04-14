@@ -5,7 +5,7 @@
       <el-input v-model="searchWord" placeholder="筛选用户"></el-input>
     </div>
 
-    <el-table height="550px" border size="small" :data="data" @selection-change="handleSelectionChange">
+    <el-table height="680px" border size="small" :data="data" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="40" align="center"></el-table-column>
       <el-table-column label="ID" prop="id" width="50" align="center"></el-table-column>
       <el-table-column label="用户头像" width="102" align="center">
@@ -42,7 +42,7 @@
     <el-pagination
       class="pagination"
       background
-      layout="total, prev, pager, next"
+      layout="prev, pager, next"
       :current-page="currentPage"
       :page-size="pageSize"
       :total="tableData.length"

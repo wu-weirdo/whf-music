@@ -7,6 +7,10 @@ import "element-plus/dist/index.css";
 import "./assets/css/index.scss";
 import "./assets/icons/index.js";
 
+// 视频插件
+import VueVideoPlayer from '@videojs-player/vue';
+import 'video.js/dist/video-js.css';
+
 import { ComponentCustomProperties } from "vue";
 import { Store } from "vuex";
 declare module "@vue/runtime-core" {
@@ -19,4 +23,4 @@ declare module "@vue/runtime-core" {
   }
 }
 
-createApp(App).use(store).use(router).use(ElementPlus).mount("#app");
+createApp(App).use(store).use(router).use(ElementPlus).use(VueVideoPlayer).mount("#app");

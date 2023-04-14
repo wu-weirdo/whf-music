@@ -10,7 +10,7 @@
       <el-button @click="deleteAll">批量删除</el-button>
       <el-input v-model="searchWord" placeholder="筛选关键词"></el-input>
     </div>
-    <el-table height="550px" border size="small" :data="tableData" @selection-change="handleSelectionChange">
+    <el-table height="680px" border size="small" :data="tableData" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="40" align="center"></el-table-column>
       <el-table-column prop="id" label="ID" width="50"></el-table-column>
       <el-table-column prop="username" label="用户" width="80"></el-table-column>

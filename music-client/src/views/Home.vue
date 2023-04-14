@@ -6,7 +6,7 @@
     </el-carousel-item>
   </el-carousel>
   <!--热门歌单-->
-  <play-list class="play-list-container" title="歌单" path="song-sheet-detail" :playList="songList"></play-list>
+  <play-list class="play-list-container" title="歌单" path="song-sheet-detail" :playList="songList" style="margin-bottom: 80px"></play-list>
   <!--热门歌手-->
   <play-list class="play-list-container" title="歌手" path="singer-detail" :playList="singerList"></play-list>
 </template>
@@ -21,6 +21,7 @@ import mixin from "@/mixins/mixin";
 const songList = ref([]); // 歌单列表
 const singerList = ref([]); // 歌手列表
 const swiperList = ref([]);// 轮播图 每次都在进行查询
+const videoList = ref([]);// 视频列表
 const { changeIndex } = mixin();
 try {
 
@@ -34,6 +35,10 @@ try {
 
   HttpManager.getAllSinger().then((res) => {
     singerList.value = (res as ResponseBody).data.sort().slice(0, 10);
+  });
+
+  HttpManager.getAllVideo().then((res) => {
+    videoList.value = (res as ResponseBody).data.sort().slice(0, 10);
   });
 
   onMounted(() => {
@@ -59,7 +64,7 @@ try {
 
 .swiper-container:deep(.el-carousel__indicators.el-carousel__indicators--outside) {
   display: inline-block;
-  transform: translateX(30vw);
+  transform: translateX(41vw);
 }
 
 .el-slider__runway {

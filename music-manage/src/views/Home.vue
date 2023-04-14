@@ -4,7 +4,7 @@
   <div class="content-box" :class="{ 'content-collapse': collapse }">
     <router-view></router-view>
   </div>
-  <yin-audio></yin-audio>
+<!--  <yin-audio></yin-audio>-->
 </template>
 
 <script lang="ts" setup>

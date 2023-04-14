@@ -5,7 +5,7 @@
     <el-pagination
       class="pagination"
       background
-      layout="total, prev, pager, next"
+      layout="prev, pager, next"
       :current-page="currentPage"
       :page-size="pageSize"
       :total="allPlayList.length"
@@ -31,7 +31,7 @@ export default defineComponent({
     const activeName = ref("全部歌单");
     const pageSize = ref(15); // 页数
     const currentPage = ref(1); // 当前页
-    const songStyle = ref(SONGSTYLE); // 歌单导航栏类别
+    const songStyle = ref([]); // 歌单导航栏类别
     const allPlayList = ref([]); // 歌单
     const data = computed(() => allPlayList.value.slice((currentPage.value - 1) * pageSize.value, currentPage.value * pageSize.value));
 

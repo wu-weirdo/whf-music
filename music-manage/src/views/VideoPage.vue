@@ -9,48 +9,29 @@
     <div class="handle-box">
       <el-button @click="deleteAll">批量删除</el-button>
       <el-input v-model="searchWord" placeholder="筛选关键词"></el-input>
-      <el-button type="primary" @click="centerDialogVisible = true">添加歌曲</el-button>
+      <el-button type="primary" @click="centerDialogVisible = true">添加视频</el-button>
     </div>
     <el-table height="680px" border size="16" :data="data" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="40"></el-table-column>
       <el-table-column label="ID" prop="id" width="50" align="center"></el-table-column>
-      <el-table-column label="歌手图片" width="110" align="center">
+      <el-table-column label="视频" align="center" width="400">
         <template v-slot="scope">
-          <div style="width: 80px; height: 80px; overflow: hidden">
-            <img :src="attachImageUrl(scope.row.pic)" style="width: 100%" />
-          </div>
-          <div class="play" @click="setSongUrl(scope.row)">
-            <svg class="icon" aria-hidden="true">
-              <use :xlink:href="toggle === scope.row.name ? playIcon : BOFANG"></use>
-            </svg>
+          <div style="width: 400px; height: 200px; overflow: hidden">
+            <img :src="attachImageUrl(scope.row.pic)" style="width: 100%"/>
           </div>
         </template>
       </el-table-column>
-      <el-table-column label="歌名" prop="name" width="150"></el-table-column>
-      <el-table-column label="专辑" prop="introduction" width="150"></el-table-column>
-      <el-table-column label="歌词" align="center">
-        <template v-slot="scope">
-          <ul style="height: 100px; overflow-y: scroll">
-            <li v-for="(item, index) in parseLyric(scope.row.lyric)" :key="index">
-              {{ item }}
-            </li>
-          </ul>
-        </template>
-      </el-table-column>
+      <el-table-column label="视频名称" prop="name" width="200"></el-table-column>
+      <el-table-column label="视频简介" prop="introduction"></el-table-column>
       <el-table-column label="资源更新" width="120" align="center">
         <template v-slot="scope">
-          <el-upload :action="updateSongImg(scope.row.id)" :show-file-list="false" :on-success="handleImgSuccess" :before-upload="beforeImgUpload">
+          <el-upload :action="updateVideoImg(scope.row.id)" :show-file-list="false" :on-success="handleImgSuccess" :before-upload="beforeImgUpload">
             <el-button>更新图片</el-button>
           </el-upload>
           <br />
-          <el-upload :action="updateSongUrl(scope.row.id)" :show-file-list="false" :on-success="handleSongSuccess" :before-upload="beforeSongUpload">
-            <el-button>更新歌曲</el-button>
+          <el-upload :action="updateVideoUrl(scope.row.id)" :show-file-list="false" :on-success="handleVideoSuccess" :before-upload="beforeVideoUpload">
+            <el-button>更新视频</el-button>
           </el-upload>
-        </template>
-      </el-table-column>
-      <el-table-column label="评论" width="90" align="center">
-        <template v-slot="scope">
-          <el-button @click="goCommentPage(scope.row.id)">评论</el-button>
         </template>
       </el-table-column>
       <el-table-column label="操作" width="160" align="center">
@@ -73,29 +54,22 @@
   </div>
 
   <!--添加歌曲-->
-  <el-dialog title="添加歌曲" v-model="centerDialogVisible" width="600px">
-    <el-form id="add-song" label-width="120px" :model="registerForm">
-      <el-form-item label="歌曲名">
+  <el-dialog title="添加视频" v-model="centerDialogVisible" width="600px">
+    <el-form id="add-video" label-width="120px" :model="registerForm">
+      <el-form-item label="视频名称">
         <el-input type="text" name="name" v-model="registerForm.name"></el-input>
       </el-form-item>
-      <el-form-item label="专辑">
-        <el-input type="text" name="introduction" v-model="registerForm.introduction"></el-input>
+      <el-form-item label="视频简介">
+        <el-input v-model="editForm.introduction"></el-input>
       </el-form-item>
-      <el-form-item label="歌词">
-        <el-input type="textarea"
-                  name="lyric"
-                  v-model="registerForm.lyric"
-                  :autosize="{ minRows: 5, maxRows: 10}">
-        </el-input>
-      </el-form-item>
-      <el-form-item label="歌曲上传">
+      <el-form-item label="视频上传">
         <input type="file" name="file" id="file"/>
       </el-form-item>
     </el-form>
     <template #footer>
       <span class="dialog-footer">
         <el-button @click="centerDialogVisible = false">取 消</el-button>
-        <el-button type="primary" @click="addSong">确 定</el-button>
+        <el-button type="primary" @click="addVideo">确 定</el-button>
       </span>
     </template>
   </el-dialog>
@@ -103,18 +77,11 @@
   <!-- 编辑弹出框 -->
   <el-dialog title="编辑" v-model="editVisible" width="600px">
     <el-form :model="editForm">
-      <el-form-item label="歌曲">
+      <el-form-item label="视频名称">
         <el-input v-model="editForm.name"></el-input>
       </el-form-item>
-      <el-form-item label="专辑">
+      <el-form-item label="视频简介">
         <el-input v-model="editForm.introduction"></el-input>
-      </el-form-item>
-      <el-form-item label="歌词">
-        <el-input type="textarea"
-                  name="lyric"
-                  v-model="editForm.lyric"
-                  :autosize="{ minRows: 5, maxRows: 10}">
-        </el-input>
       </el-form-item>
     </el-form>
     <template #footer>
@@ -133,7 +100,6 @@
 import { defineComponent, getCurrentInstance, watch, ref, reactive, computed } from "vue";
 import { useStore } from "vuex";
 import mixin from "@/mixins/mixin";
-import { Icon, RouterName } from "@/enums";
 import { HttpManager } from "@/api";
 import { parseLyric } from "@/utils";
 import YinDelDialog from "@/components/dialog/YinDelDialog.vue";
@@ -144,7 +110,7 @@ export default defineComponent({
   },
   setup: function () {
     const {proxy} = getCurrentInstance();
-    const {routerManager, beforeImgUpload, beforeSongUpload} = mixin();
+    const {routerManager, beforeImgUpload, beforeVideoUpload} = mixin();
     const store = useStore();
 
     const tableData = ref([]); // 记录歌曲，用于显示
@@ -153,13 +119,7 @@ export default defineComponent({
     const currentPage = ref(1); // 当前页
     const singerId = ref("");
     const singerName = ref("");
-    const toggle = ref(false); // 控制播放图标状态
-    const BOFANG = ref(Icon.BOFANG);
-    const ZANTING = ref(Icon.ZANTING);
     const breadcrumbList = computed(() => store.getters.breadcrumbList);
-
-    const isPlay = computed(() => store.getters.isPlay); // 播放状态
-    const playIcon = computed(() => (isPlay.value ? ZANTING.value : BOFANG.value)); // 播放状态
     // 计算当前表格中的数据
     const data = computed(() => {
       return tableData.value.slice((currentPage.value - 1) * pageSize.value, currentPage.value * pageSize.value);
@@ -181,36 +141,26 @@ export default defineComponent({
 
     singerId.value = proxy.$route.query.id as string;
     singerName.value = proxy.$route.query.name as string;
-    proxy.$store.commit("setIsPlay", false);
     getData();
 
-    // 获取歌曲
+    // 获取视频
     async function getData() {
       tableData.value = [];
       tempDate.value = [];
-      const result = (await HttpManager.getSongOfSingerId(singerId.value)) as ResponseBody;
+      let id = singerId.value
+      const result = (await HttpManager.getVideoList({"singerId" : id, "name" : null})) as ResponseBody;
       tableData.value = result.data;
       tempDate.value = result.data;
       currentPage.value = 1;
     }
 
-    function setSongUrl(row) {
-      proxy.$store.commit("setUrl", row.url);
-      toggle.value = row.name;
-      if (isPlay.value) {
-        proxy.$store.commit("setIsPlay", false);
-      } else {
-        proxy.$store.commit("setIsPlay", true);
-      }
+    // 更新图片
+    function updateVideoImg(id) {
+      return HttpManager.updateVideoImg(id);
     }
 
-    // 更新歌曲图片
-    function updateSongImg(id) {
-      return HttpManager.updateSongImg(id);
-    }
-
-    function updateSongUrl(id) {
-      return HttpManager.updateSongUrl(id);
+    function updateVideoUrl(id) {
+      return HttpManager.updateVideoUrl(id);
     }
 
     // 获取当前页
@@ -218,7 +168,7 @@ export default defineComponent({
       currentPage.value = val;
     }
 
-    function handleSongSuccess(res) {
+    function handleVideoSuccess(res) {
       (proxy as any).$message({
         message: res.message,
         type: res.type,
@@ -236,32 +186,6 @@ export default defineComponent({
     }
 
     /**
-     * 路由
-     */
-    function goCommentPage(id) {
-      const breadcrumbList = reactive([
-        {
-          path: RouterName.Singer,
-          name: "歌手管理",
-        },
-        {
-          path: RouterName.Song,
-          query: {
-            id: singerId.value,
-            name: singerName.value,
-          },
-          name: "歌曲信息",
-        },
-        {
-          path: "",
-          name: "评论详情",
-        },
-      ]);
-      proxy.$store.commit("setBreadcrumbList", breadcrumbList);
-      routerManager(RouterName.Comment, {path: RouterName.Comment, query: {id, type: 0}});
-    }
-
-    /**
      * 添加
      */
     const centerDialogVisible = ref(false);
@@ -272,11 +196,10 @@ export default defineComponent({
       lyric: "",
     });
 
-    function addSong() {
-      const addSongForm = new FormData(document.getElementById("add-song") as HTMLFormElement);
+    function addVideo() {
+      const addSongForm = new FormData(document.getElementById("add-video") as HTMLFormElement);
       addSongForm.append("singerId", singerId.value);
       addSongForm.set("name", singerName.value + "-" + addSongForm.get("name"));
-      if (!addSongForm.get("lyric")) addSongForm.set("lyric", "[00:00:00]暂无歌词");
 
       const req = new XMLHttpRequest();
       req.onreadystatechange = () => {
@@ -291,11 +214,10 @@ export default defineComponent({
             registerForm.name = "";
             registerForm.singerName = "";
             registerForm.introduction = "";
-            registerForm.lyric = "";
           }
         }
       };
-      req.open("post", HttpManager.attachImageUrl(`/song/add`), false);
+      req.open("post", HttpManager.attachImageUrl(`/video/add`), false);
       req.send(addSongForm);
       (document.getElementById("file") as HTMLFormElement).value = "";
       centerDialogVisible.value = false;
@@ -313,7 +235,6 @@ export default defineComponent({
       createTime: "",
       updateTime: "",
       pic: "",
-      lyric: "",
       url: "",
     });
 
@@ -326,7 +247,6 @@ export default defineComponent({
       editForm.createTime = row.createTime;
       editForm.updateTime = row.updateTime;
       editForm.pic = row.pic;
-      editForm.lyric = row.lyric;
       editForm.url = row.url;
       editVisible.value = true;
     }
@@ -336,8 +256,7 @@ export default defineComponent({
       let singerId = editForm.singerId;
       let name = editForm.name;
       let introduction = editForm.introduction;
-      let lyric = editForm.lyric;
-      const result = (await HttpManager.updateSongMsg({id, singerId, name, introduction, lyric})) as ResponseBody;
+      const result = (await HttpManager.updateVideoMsg({id, singerId, name, introduction})) as ResponseBody;
       (proxy as any).$message({
         message: result.message,
         type: result.type,
@@ -354,7 +273,7 @@ export default defineComponent({
     const delVisible = ref(false); // 显示删除框
 
     async function confirm() {
-      const result = (await HttpManager.deleteSong(idx.value)) as ResponseBody;
+      const result = (await HttpManager.deleteVideo(idx.value)) as ResponseBody;
       (proxy as any).$message({
         message: result.message,
         type: result.type,
@@ -381,8 +300,6 @@ export default defineComponent({
     }
 
     return {
-      playIcon,
-      toggle,
       searchWord,
       data,
       editForm,
@@ -393,8 +310,6 @@ export default defineComponent({
       delVisible,
       pageSize,
       currentPage,
-      ZANTING,
-      BOFANG,
       breadcrumbList,
       deleteAll,
       handleSelectionChange,
@@ -403,17 +318,15 @@ export default defineComponent({
       beforeImgUpload,
       parseLyric,
       saveEdit,
-      updateSongImg,
-      updateSongUrl,
+      updateVideoImg,
+      updateVideoUrl,
       deleteRow,
       confirm,
       attachImageUrl: HttpManager.attachImageUrl,
-      addSong,
+      addVideo,
       editRow,
-      handleSongSuccess,
-      setSongUrl,
-      beforeSongUpload,
-      goCommentPage,
+      handleVideoSuccess,
+      beforeVideoUpload,
     };
   },
 });

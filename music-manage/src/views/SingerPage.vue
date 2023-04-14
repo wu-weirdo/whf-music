@@ -5,13 +5,17 @@
       <el-input placeholder="筛选歌手" v-model="searchWord"></el-input>
       <el-button type="primary" @click="centerDialogVisible = true">添加歌手</el-button>
     </div>
-    <el-table height="550px" border size="small" :data="data" @selection-change="handleSelectionChange">
+    <el-table height="680px" border size="16" :data="data" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="40" align="center"></el-table-column>
       <el-table-column label="ID" prop="id" width="50" align="center"></el-table-column>
       <el-table-column label="歌手图片" prop="pic" width="110" align="center">
         <template v-slot="scope">
           <div class="singer-img">
-            <img :src="attachImageUrl(scope.row.pic)" style="width: 100%" />
+            <el-image style="width: 100%"
+                      :src="attachImageUrl(scope.row.pic)"
+                      :preview-src-list="[attachImageUrl(scope.row.pic)]"
+                      fit="cover" append-to-body>
+            </el-image>
           </div>
           <el-upload :action="uploadUrl(scope.row.id)" :show-file-list="false" :on-success="handleImgSuccess" :before-upload="beforeImgUpload">
             <el-button>更新图片</el-button>
@@ -32,14 +36,14 @@
       <el-table-column label="地区" prop="location" width="100" align="center"></el-table-column>
       <el-table-column label="简介" prop="introduction">
         <template v-slot="scope">
-          <p style="height: 100px; overflow: scroll">
-            {{ scope.row.introduction }}
-          </p>
+          {{ scope.row.introduction }}
         </template>
       </el-table-column>
-      <el-table-column label="歌曲管理" width="120" align="center">
+      <el-table-column label="资源管理" width="120" align="center">
         <template v-slot="scope">
-          <el-button @click="goSongPage(scope.row)">歌曲管理</el-button>
+          <el-button @click="goSongPage(scope.row)" style="margin-bottom: 10px">歌曲管理</el-button>
+          <br>
+          <el-button @click="goVideoPage(scope.row)">视频管理</el-button>
         </template>
       </el-table-column>
       <el-table-column label="操作" width="160" align="center">
@@ -52,7 +56,7 @@
     <el-pagination
       class="pagination"
       background
-      layout="total, prev, pager, next"
+      layout="prev, pager, next"
       :current-page="currentPage"
       :page-size="pageSize"
       :total="tableData.length"
@@ -210,6 +214,24 @@ export default defineComponent({
       });
     }
 
+    function goVideoPage(row) {
+      const breadcrumbList = reactive([
+        {
+          path: RouterName.Singer,
+          name: "歌手管理",
+        },
+        {
+          path: "",
+          name: "视频信息",
+        },
+      ]);
+      proxy.$store.commit("setBreadcrumbList", breadcrumbList);
+      routerManager(RouterName.Video, {
+        path: RouterName.Video,
+        query: { id: row.id, name: row.name },
+      });
+    }
+
     /**
      * 添加
      */
@@ -361,6 +383,7 @@ export default defineComponent({
       getBirth,
       uploadUrl,
       goSongPage,
+      goVideoPage,
       editRow,
       handleCurrentChange,
       addsinger,

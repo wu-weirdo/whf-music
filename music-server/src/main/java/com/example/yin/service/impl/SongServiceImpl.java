@@ -3,9 +3,11 @@ package com.example.yin.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.yin.common.R;
+import com.example.yin.mapper.SingerMapper;
 import com.example.yin.mapper.SongMapper;
+import com.example.yin.model.domain.Singer;
 import com.example.yin.model.domain.Song;
-import com.example.yin.model.reponse.SongIntroductionTreeResponse;
+import com.example.yin.model.reponse.TreeResponse;
 import com.example.yin.model.request.SongRequest;
 import com.example.yin.service.SongService;
 import org.springframework.beans.BeanUtils;
@@ -25,6 +27,9 @@ public class SongServiceImpl extends ServiceImpl<SongMapper, Song> implements So
     @Autowired
     private SongMapper songMapper;
 
+    @Autowired
+    private SingerMapper singerMapper;
+
     @Override
     public R allSong() {
         return R.success(null, songMapper.selectList(null));
@@ -32,11 +37,14 @@ public class SongServiceImpl extends ServiceImpl<SongMapper, Song> implements So
 
     @Override
     public R addSong(SongRequest addSongRequest, MultipartFile mpfile) {
+        Singer singer = singerMapper.selectOne(new QueryWrapper<Singer>().eq("id", addSongRequest.getSingerId()));
         Song song = new Song();
         BeanUtils.copyProperties(addSongRequest, song);
         String pic = "/img/songPic/tubiao.jpg";
         String fileName = mpfile.getOriginalFilename();
-        String filePath = System.getProperty("user.dir") + System.getProperty("file.separator") + "song";
+        String filePath = System.getProperty("user.dir") + System.getProperty("file.separator")
+                + "song" + System.getProperty("file.separator") + singer.getName()
+                + System.getProperty("file.separator") + addSongRequest.getIntroduction();
         File file1 = new File(filePath);
         if (!file1.exists()) {
             if (!file1.mkdir()) {
@@ -44,7 +52,7 @@ public class SongServiceImpl extends ServiceImpl<SongMapper, Song> implements So
             }
         }
         File dest = new File(filePath + System.getProperty("file.separator") + fileName);
-        String storeUrlPath = "/song/" + fileName;
+        String storeUrlPath = "/song/" + singer.getName() + "/" + addSongRequest.getIntroduction() + "/" + fileName;
         try {
             mpfile.transferTo(dest);
         } catch (IOException e) {
@@ -74,8 +82,15 @@ public class SongServiceImpl extends ServiceImpl<SongMapper, Song> implements So
 
     @Override
     public R updateSongUrl(MultipartFile urlFile, int id) {
+        Song song = songMapper.selectById(id);
+        if (Objects.isNull(song)) {
+            return R.error("更新失败");
+        }
+        Singer singer = singerMapper.selectOne(new QueryWrapper<Singer>().eq("id", song.getSingerId()));
         String fileName = urlFile.getOriginalFilename();
-        String filePath = System.getProperty("user.dir") + System.getProperty("file.separator") + "song";
+        String filePath = System.getProperty("user.dir") + System.getProperty("file.separator")
+                + "song" + System.getProperty("file.separator") + singer.getName()
+                + System.getProperty("file.separator") + song.getIntroduction();
         File file1 = new File(filePath);
         if (!file1.exists()) {
             if (!file1.mkdir()) {
@@ -83,16 +98,16 @@ public class SongServiceImpl extends ServiceImpl<SongMapper, Song> implements So
             }
         }
         File dest = new File(filePath + System.getProperty("file.separator") + fileName);
-        String storeUrlPath = "/song/" + fileName;
+        String storeUrlPath = "/song/" + singer.getName() + "/" + song.getIntroduction() + "/" + fileName;
         try {
             urlFile.transferTo(dest);
         } catch (IOException e) {
             return R.fatal("更新失败" + e.getMessage());
         }
-        Song song = new Song();
-        song.setId(id);
-        song.setUrl(storeUrlPath);
-        if (songMapper.updateById(song) > 0) {
+        Song update = new Song();
+        update.setId(id);
+        update.setUrl(storeUrlPath);
+        if (songMapper.updateById(update) > 0) {
             return R.success("更新成功", storeUrlPath);
         } else {
             return R.error("更新失败");
@@ -159,7 +174,7 @@ public class SongServiceImpl extends ServiceImpl<SongMapper, Song> implements So
 
     @Override
     public R songTreeOfSingerId(int singerId) {
-        List<SongIntroductionTreeResponse> responseList = new ArrayList<>();
+        List<TreeResponse> responseList = new ArrayList<>();
         QueryWrapper<Song> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("singer_id",singerId);
         List<Song> songs = songMapper.selectList(queryWrapper);
@@ -168,14 +183,14 @@ public class SongServiceImpl extends ServiceImpl<SongMapper, Song> implements So
         }
         Map<String, List<Song>> collect = songs.stream().collect(Collectors.groupingBy(Song::getIntroduction, Collectors.toList()));
         for (Map.Entry<String, List<Song>> songMap : collect.entrySet()) {
-            SongIntroductionTreeResponse response = new SongIntroductionTreeResponse();
+            TreeResponse response = new TreeResponse();
             response.setValue(songMap.getKey());
             response.setLabel(songMap.getKey());
             List<Song> songList = songMap.getValue();
             if (!CollectionUtils.isEmpty(songList)) {
-                List<SongIntroductionTreeResponse> childrenList = new ArrayList<>();
+                List<TreeResponse> childrenList = new ArrayList<>();
                 for (Song song : songList) {
-                    SongIntroductionTreeResponse children = new SongIntroductionTreeResponse();
+                    TreeResponse children = new TreeResponse();
                     children.setValue(String.valueOf(song.getId()));
                     children.setLabel(song.getName());
                     children.setChildren(Collections.emptyList());

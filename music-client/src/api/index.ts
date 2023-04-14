@@ -89,7 +89,16 @@ const HttpManager = {
   insertUserSupport:({commentId,userId}) => post(`userSupport/insert`, {commentId,userId}),
 
   //获取所有的海报
-  getBannerList: () => get("banner/getAllBanner")
+  getBannerList: () => get("banner/getAllBanner"),
+
+  //歌手视频树
+  getSingerVideoTree: () => get("video/tree"),
+
+  //视频详情
+  getVideoDetail:(id) => get(`video/detail?id=${id}`),
+
+  // 返回所有歌手
+  getAllVideo: () => post("video/list"),
 };
 
 

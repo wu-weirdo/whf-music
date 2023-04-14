@@ -5,7 +5,7 @@
     <el-pagination
       class="pagination"
       background
-      layout="total, prev, pager, next"
+      layout="prev, pager, next"
       :current-page="currentPage"
       :page-size="pageSize"
       :total="allPlayList.length"

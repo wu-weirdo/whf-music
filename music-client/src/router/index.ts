@@ -89,6 +89,11 @@ const routes: Array<RouteRecordRaw> = [
           }
         ]
       },
+      {
+        path: "/video",
+        name: "video",
+        component: () => import("@/views/video/Video.vue"),
+      },
     ],
   },
 ];
