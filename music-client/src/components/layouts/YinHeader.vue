@@ -68,8 +68,8 @@ export default defineComponent({
     function goMenuList(path) {
       if (path == RouterName.SignOut) {
         proxy.$store.commit("setToken", false);
-        changeIndex(NavName.Home);
-        routerManager(RouterName.Home, { path: RouterName.Home });
+        changeIndex(NavName.SignIn);
+        routerManager(RouterName.SignIn, { path: RouterName.SignIn });
       } else {
         routerManager(path, { path });
       }

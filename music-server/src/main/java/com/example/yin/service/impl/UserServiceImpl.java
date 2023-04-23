@@ -7,6 +7,7 @@ import com.example.yin.constant.Constants;
 import com.example.yin.mapper.UserMapper;
 import com.example.yin.model.domain.User;
 import com.example.yin.model.request.UserRequest;
+import com.example.yin.security.utils.SecurityUtils;
 import com.example.yin.service.UserService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
@@ -20,6 +21,7 @@ import javax.servlet.http.HttpSession;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.util.Objects;
 
 import static com.example.yin.constant.Constants.SALT;
 
@@ -43,16 +45,15 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
 
     @Override
     public R updatePassword(UserRequest updatePasswordRequest) {
-
-       if (!this.verityPasswd(updatePasswordRequest.getUsername(),updatePasswordRequest.getOldPassword())) {
+        User user = userMapper.selectById(updatePasswordRequest.getId());
+        if (Objects.isNull(user)) {
+            return R.error("用户不存在");
+        }
+        if (!SecurityUtils.matchesPassword(updatePasswordRequest.getOldPassword(), user.getPassword())) {
             return R.error("密码输入错误");
         }
-
-        User user = new User();
-        user.setId(updatePasswordRequest.getId());
-        String secretPassword = DigestUtils.md5DigestAsHex((SALT + updatePasswordRequest.getPassword()).getBytes(StandardCharsets.UTF_8));
+        String secretPassword = SecurityUtils.encryptPassword(updatePasswordRequest.getPassword());
         user.setPassword(secretPassword);
-
         if (userMapper.updateById(user) > 0) {
             return R.success("密码修改成功");
         } else {
@@ -97,7 +98,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
     public boolean verityPasswd(String username, String password) {
         QueryWrapper<User> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("user_name",username);
-        String secretPassword = DigestUtils.md5DigestAsHex((SALT + password).getBytes(StandardCharsets.UTF_8));
+        String secretPassword = SecurityUtils.encryptPassword(password);
 
         queryWrapper.eq("password",secretPassword);
         return userMapper.selectCount(queryWrapper) > 0;

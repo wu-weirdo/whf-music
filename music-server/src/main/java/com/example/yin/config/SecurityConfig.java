@@ -14,8 +14,6 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.security.web.authentication.logout.LogoutFilter;
-import org.springframework.web.filter.CorsFilter;
 
 import javax.annotation.Resource;
 
@@ -49,12 +47,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
      */
     @Resource
     private AuthenticationEntryPointImpl unauthorizedHandler;
-
-    /**
-     * 跨域过滤器
-     */
-    @Resource
-    private CorsFilter corsFilter;
 
     /**
      * 解决 无法直接注入 AuthenticationManager
@@ -106,9 +98,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.addFilterBefore(authenticationTokenFilter, UsernamePasswordAuthenticationFilter.class);
         // 添加Logout filter
         http.logout().logoutUrl("/logout").logoutSuccessHandler(logoutSuccessHandler);
-        // 添加CORS filter
-        http.addFilterBefore(corsFilter, JwtAuthenticationTokenFilter.class);
-        http.addFilterBefore(corsFilter, LogoutFilter.class);
+        // 跨域
+        http.cors();
     }
 
     /**

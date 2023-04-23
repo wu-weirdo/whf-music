@@ -70,10 +70,11 @@ h1 {
 
 @media screen and (min-width: $sm) {
   .setting {
-    margin: 30px 10%;
+    margin: 30px 30%;
     margin-top: 0;
     padding: 20px;
     min-height: 60vh;
+    width: 600px;
   }
 }
 

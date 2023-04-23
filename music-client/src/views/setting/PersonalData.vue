@@ -63,7 +63,7 @@ export default defineComponent({
 
     async function getUserInfo(id) {
       const result = (await HttpManager.getUserOfId(id)) as ResponseBody;
-      registerForm.username = result.data[0].username;
+      registerForm.username = result.data[0].userName;
       registerForm.sex = result.data[0].sex;
       registerForm.phoneNum = result.data[0].phoneNum;
       registerForm.email = result.data[0].email;
