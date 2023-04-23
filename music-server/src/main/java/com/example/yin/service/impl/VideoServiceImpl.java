@@ -36,9 +36,10 @@ public class VideoServiceImpl extends ServiceImpl<VideoMapper, Video> implements
     @Override
     public R addVideo(Video video, MultipartFile file) {
         Singer singer = singerMapper.selectOne(new QueryWrapper<Singer>().eq("id", video.getSingerId()));
-        String pic = "/img/songPic/tubiao.jpg";
+        String pic = "/resource/img/songPic/tubiao.jpg";
         String fileName = file.getOriginalFilename();
         String filePath = System.getProperty("user.dir") + System.getProperty("file.separator")
+                + "resource" + System.getProperty("file.separator")
                 + "video" + System.getProperty("file.separator") + singer.getName();
         File file1 = new File(filePath);
         if (!file1.exists()) {
@@ -47,7 +48,7 @@ public class VideoServiceImpl extends ServiceImpl<VideoMapper, Video> implements
             }
         }
         File dest = new File(filePath + System.getProperty("file.separator") + fileName);
-        String storeUrlPath = "/video/" + singer.getName() + "/" + fileName;
+        String storeUrlPath = "/resource/video/" + singer.getName() + "/" + fileName;
         try {
             file.transferTo(dest);
         } catch (IOException e) {
@@ -76,7 +77,7 @@ public class VideoServiceImpl extends ServiceImpl<VideoMapper, Video> implements
         }
 
         File dest = new File(filePath + System.getProperty("file.separator") + fileName);
-        String storeUrlPath = "/img/videoPic/" + fileName;
+        String storeUrlPath = "/resource/img/videoPic/" + fileName;
         try {
             urlFile.transferTo(dest);
         } catch (IOException e) {
@@ -109,7 +110,7 @@ public class VideoServiceImpl extends ServiceImpl<VideoMapper, Video> implements
             }
         }
         File dest = new File(filePath + System.getProperty("file.separator") + fileName);
-        String storeUrlPath = "/video/" + singer.getName() + "/" + fileName;
+        String storeUrlPath = "/resource/video/" + singer.getName() + "/" + fileName;
         try {
             urlFile.transferTo(dest);
         } catch (IOException e) {

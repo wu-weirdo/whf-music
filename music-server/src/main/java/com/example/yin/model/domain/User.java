@@ -6,13 +6,13 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import java.util.Date;
 
-@TableName(value = "consumer")
+@TableName(value = "user")
 @Data
-public class Consumer {
+public class User {
     @TableId(type = IdType.AUTO)
     private Integer id;
 
-    private String username;
+    private String userName;
 
     private String password;
 

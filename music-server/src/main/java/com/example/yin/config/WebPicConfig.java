@@ -17,21 +17,23 @@ public class WebPicConfig implements WebMvcConfigurer {
     //TODO 这个配置类的目的是什么  就是注册了一个类似于拦截器吧  看到对应的资源 会将其修改成相应的地址
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        registry.addResourceHandler("/img/avatorImages/**")
+        registry.addResourceHandler("/resource/img/**")
+                .addResourceLocations(Constants.IMAGES_PATH);
+        registry.addResourceHandler("/resource/img/avatorImages/**")
                 .addResourceLocations(Constants.AVATOR_IMAGES_PATH);
-        registry.addResourceHandler("/img/singerPic/**")
+        registry.addResourceHandler("/resource/img/singerPic/**")
                 .addResourceLocations(Constants.SINGER_PIC_PATH);
-        registry.addResourceHandler("/img/songPic/**")
+        registry.addResourceHandler("/resource/img/songPic/**")
                 .addResourceLocations(Constants.SONG_PIC_PATH);
-        registry.addResourceHandler("/song/**")
+        registry.addResourceHandler("/resource/song/**")
                 .addResourceLocations(Constants.SONG_PATH);
-        registry.addResourceHandler("/img/songListPic/**")
+        registry.addResourceHandler("/resource/img/songListPic/**")
                 .addResourceLocations(Constants.SONGLIST_PIC_PATH);
-        registry.addResourceHandler("/img/swiper/**")
+        registry.addResourceHandler("/resource/img/swiper/**")
                 .addResourceLocations(Constants.BANNER_PIC_PATH);
-        registry.addResourceHandler("/video/**")
+        registry.addResourceHandler("/resource/video/**")
                 .addResourceLocations(Constants.VIDEO_PATH);
-        registry.addResourceHandler("/img/videoPic/**")
+        registry.addResourceHandler("/resource/img/videoPic/**")
                 .addResourceLocations(Constants.VIDEO_PIC_PATH);
     }
 

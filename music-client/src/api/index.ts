@@ -2,12 +2,12 @@ import { getBaseURL, get, post, deletes } from "./request";
 
 const HttpManager = {
   // 获取图片信息
-  attachImageUrl: (url) => url ? `${getBaseURL()}/${url}` : "https://cube.elemecdn.com/e/fd/0fc7d20532fdaf769a25683617711png.png",
+  attachImageUrl: (url) => url ? `${getBaseURL()}${url}` : "https://cube.elemecdn.com/e/fd/0fc7d20532fdaf769a25683617711png.png",
   // =======================> 用户 API 完成
   // 登录
-  signIn: ({username,password}) => post(`user/login/status`, {username,password}),
+  signIn: ({userName,password}) => post(`login`, {userName,password}),
   // 注册
-  SignUp: ({username,password,sex,phoneNum,email,birth,introduction,location}) => post(`user/add`, {username,password,sex,phoneNum,email,birth,introduction,location}),
+  SignUp: ({userName,password,sex,phoneNum,email,birth,introduction,location}) => post(`register`, {userName,password,sex,phoneNum,email,birth,introduction,location}),
   // 删除用户
   deleteUser: (id) => get(`user/delete?id=${id}`),
   // 更新用户信息

@@ -5,8 +5,8 @@
       <span>用户注册</span>
     </div>
     <el-form ref="signUpForm" label-width="70px" status-icon :model="registerForm" :rules="SignUpRules">
-      <el-form-item prop="username" label="用户名">
-        <el-input v-model="registerForm.username" placeholder="用户名"></el-input>
+      <el-form-item prop="userName" label="用户名">
+        <el-input v-model="registerForm.userName" placeholder="用户名"></el-input>
       </el-form-item>
       <el-form-item prop="password" label="密码">
         <el-input type="password" placeholder="密码" v-model="registerForm.password"></el-input>
@@ -60,7 +60,7 @@ export default defineComponent({
     const { routerManager, changeIndex } = mixin();
 
     const registerForm = reactive({
-      username: "",
+      userName: "",
       password: "",
       sex: "",
       phoneNum: "",
@@ -79,7 +79,7 @@ export default defineComponent({
 
 
       try {
-        const username = registerForm.username;
+        const userName = registerForm.userName;
         const password = registerForm.password;
         const sex = registerForm.sex;
         const phoneNum = registerForm.phoneNum;
@@ -87,7 +87,7 @@ export default defineComponent({
         const birth = registerForm.birth;
         const introduction = registerForm.introduction;
         const location = registerForm.location;
-        const result = (await HttpManager.SignUp({username,password,sex,phoneNum,email,birth,introduction,location})) as ResponseBody;
+        const result = (await HttpManager.SignUp({userName,password,sex,phoneNum,email,birth,introduction,location})) as ResponseBody;
         (proxy as any).$message({
           message: result.message,
           type: result.type,

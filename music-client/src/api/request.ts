@@ -1,5 +1,6 @@
 import axios from "axios";
 import router from "@/router";
+import store from "@/store";
 
 const BASE_URL = process.env.NODE_HOST;
 
@@ -8,6 +9,21 @@ axios.defaults.withCredentials = true; // true允许跨域
 axios.defaults.baseURL = BASE_URL;
 // Content-Type 响应头
 axios.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded;charset=UTF-8";
+
+// 请求拦截器
+axios.interceptors.request.use(config => {
+  // 什么时候执行这个函数?   发送请求之前
+  // config是什么?  记录了本地请求的相关信息的一个对象
+  // 这个函数能用来做什么? 做一些请求之前的操作(例如:添加请求头,例如token)
+  const token = store.getters.token
+  if (token) {
+    config.headers["Authorization"] = token
+  }
+  // console.log("执行了 请求拦截器的代码", config);
+  return config
+}, err => {
+  return Promise.reject(err)
+});
 
 // 响应拦截器
 axios.interceptors.response.use(
@@ -27,7 +43,7 @@ axios.interceptors.response.use(
         // 401: 未登录
         case 401:
           router.replace({
-            path: "/",
+            path: "/sign-in",
             query: {
               // redirect: router.currentRoute.fullPath
             },

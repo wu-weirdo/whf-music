@@ -40,9 +40,10 @@ public class SongServiceImpl extends ServiceImpl<SongMapper, Song> implements So
         Singer singer = singerMapper.selectOne(new QueryWrapper<Singer>().eq("id", addSongRequest.getSingerId()));
         Song song = new Song();
         BeanUtils.copyProperties(addSongRequest, song);
-        String pic = "/img/songPic/tubiao.jpg";
+        String pic = "/resource/img/songPic/tubiao.jpg";
         String fileName = mpfile.getOriginalFilename();
         String filePath = System.getProperty("user.dir") + System.getProperty("file.separator")
+                + "resource" + System.getProperty("file.separator")
                 + "song" + System.getProperty("file.separator") + singer.getName()
                 + System.getProperty("file.separator") + addSongRequest.getIntroduction();
         File file1 = new File(filePath);
@@ -52,7 +53,7 @@ public class SongServiceImpl extends ServiceImpl<SongMapper, Song> implements So
             }
         }
         File dest = new File(filePath + System.getProperty("file.separator") + fileName);
-        String storeUrlPath = "/song/" + singer.getName() + "/" + addSongRequest.getIntroduction() + "/" + fileName;
+        String storeUrlPath = "/resource/song/" + singer.getName() + "/" + addSongRequest.getIntroduction() + "/" + fileName;
         try {
             mpfile.transferTo(dest);
         } catch (IOException e) {
@@ -89,6 +90,7 @@ public class SongServiceImpl extends ServiceImpl<SongMapper, Song> implements So
         Singer singer = singerMapper.selectOne(new QueryWrapper<Singer>().eq("id", song.getSingerId()));
         String fileName = urlFile.getOriginalFilename();
         String filePath = System.getProperty("user.dir") + System.getProperty("file.separator")
+                + "resource" + System.getProperty("file.separator")
                 + "song" + System.getProperty("file.separator") + singer.getName()
                 + System.getProperty("file.separator") + song.getIntroduction();
         File file1 = new File(filePath);
@@ -98,7 +100,7 @@ public class SongServiceImpl extends ServiceImpl<SongMapper, Song> implements So
             }
         }
         File dest = new File(filePath + System.getProperty("file.separator") + fileName);
-        String storeUrlPath = "/song/" + singer.getName() + "/" + song.getIntroduction() + "/" + fileName;
+        String storeUrlPath = "/resource/song/" + singer.getName() + "/" + song.getIntroduction() + "/" + fileName;
         try {
             urlFile.transferTo(dest);
         } catch (IOException e) {
@@ -126,7 +128,7 @@ public class SongServiceImpl extends ServiceImpl<SongMapper, Song> implements So
         }
 
         File dest = new File(filePath + System.getProperty("file.separator") + fileName);
-        String storeUrlPath = "/img/songPic/" + fileName;
+        String storeUrlPath = "/resource/img/songPic/" + fileName;
         try {
             urlFile.transferTo(dest);
         } catch (IOException e) {

@@ -5,8 +5,8 @@
       <span>帐号登录</span>
     </div>
     <el-form ref="signInForm" status-icon :model="registerForm" :rules="SignInRules">
-      <el-form-item prop="username">
-        <el-input placeholder="用户名" v-model="registerForm.username"></el-input>
+      <el-form-item prop="userName">
+        <el-input placeholder="用户名" v-model="registerForm.userName"></el-input>
       </el-form-item>
       <el-form-item prop="password">
         <el-input type="password" placeholder="密码" v-model="registerForm.password" @keyup.enter="handleLoginIn"></el-input>
@@ -36,7 +36,7 @@ export default defineComponent({
 
     // 登录用户名密码
     const registerForm = reactive({
-      username: "",
+      userName: "",
       password: "",
     });
 
@@ -49,19 +49,19 @@ export default defineComponent({
 
 
       try {
-        const username = registerForm.username;
+        const userName = registerForm.userName;
         const password = registerForm.password;
-        const result = (await HttpManager.signIn({username,password})) as ResponseBody;
+        const result = (await HttpManager.signIn({userName,password})) as ResponseBody;
         (proxy as any).$message({
           message: result.message,
           type: result.type,
         });
 
         if (result.success) {
-          proxy.$store.commit("setUserId", result.data[0].id);
-          proxy.$store.commit("setUsername", result.data[0].username);
-          proxy.$store.commit("setUserPic", result.data[0].avator);
-          proxy.$store.commit("setToken", true);
+          proxy.$store.commit("setUserId", result.data.user.id);
+          proxy.$store.commit("setUsername", result.data.user.userName);
+          proxy.$store.commit("setUserPic", result.data.user.avator);
+          proxy.$store.commit("setToken", result.data.token);
           changeIndex(NavName.Home);
           routerManager(RouterName.Home, { path: RouterName.Home });
         }

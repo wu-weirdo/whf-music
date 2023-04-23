@@ -22,7 +22,7 @@ export const SignInRules = {
 
 // 注册规则
 export const SignUpRules = {
-  username: [{ required: true, trigger: "blur", min: 3 }],
+  userName: [{ required: true, trigger: "blur", min: 2 }],
   password: [{ required: true, trigger: "blur", min: 3 }],
   sex: [{ required: true, message: "请选择性别", trigger: "change" }],
   phoneNum: [{ essage: "请选择日期", trigger: "blur" }],

@@ -1,5 +1,6 @@
 package com.example.yin.common;
 
+import com.example.yin.constant.ResultEnum;
 import lombok.Data;
 
 /**
@@ -21,7 +22,7 @@ public class R {
 
     public static R success(String message) {
         R r = new R();
-        r.setCode(200);
+        r.setCode(ResultEnum.SUCCESS.getCode());
         r.setMessage(message);
         r.setSuccess(true);
         r.setType("success");
@@ -42,15 +43,27 @@ public class R {
     }
 
     public static R error(String message) {
-        R r = success(message);
+        R r = new R();
+        r.setCode(ResultEnum.ERROR.getCode());
+        r.setMessage(message);
         r.setSuccess(false);
         r.setType("error");
         return r;
     }
 
+    public static R error(Integer code, String message) {
+        R r = new R();
+        r.setCode(code);
+        r.setMessage(message);
+        r.setSuccess(false);
+        r.setType("error");
+        r.setData(null);
+        return r;
+    }
+
     public static R fatal(String message) {
         R r = error(message);
-        r.setCode(500);
+        r.setType("fatal");
         return r;
     }
 }

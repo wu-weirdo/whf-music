@@ -2,21 +2,19 @@ package com.example.yin.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.example.yin.common.R;
-import com.example.yin.model.domain.Consumer;
-import com.example.yin.model.request.ConsumerRequest;
+import com.example.yin.model.domain.User;
+import com.example.yin.model.request.UserRequest;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpSession;
 
-public interface ConsumerService extends IService<Consumer> {
+public interface UserService extends IService<User> {
 
-    R addUser(ConsumerRequest registryRequest);
-
-    R updateUserMsg(ConsumerRequest updateRequest);
+    R updateUserMsg(UserRequest updateRequest);
 
     R updateUserAvator(MultipartFile avatorFile, int id);
 
-    R updatePassword(ConsumerRequest updatePasswordRequest);
+    R updatePassword(UserRequest updatePasswordRequest);
 
     boolean existUser(String username);
 
@@ -28,6 +26,6 @@ public interface ConsumerService extends IService<Consumer> {
 
     R userOfId(Integer id);
 
-    R loginStatus(ConsumerRequest loginRequest, HttpSession session);
+    User selectUserByUserName(String userName);
 
 }

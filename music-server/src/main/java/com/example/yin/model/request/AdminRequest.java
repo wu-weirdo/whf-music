@@ -10,7 +10,7 @@ import lombok.Data;
 public class AdminRequest {
     private Integer id;
 
-    private String username;
+    private String userName;
 
     private String password;
 }

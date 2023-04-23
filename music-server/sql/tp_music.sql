@@ -178,11 +178,11 @@ values (3, 1, 0, 1, '里面乱乱糟糟\n我们别再闹了\n这个冬天已然�
        (61, 32, 28, NULL, '1', '2022-06-06 14:27:47', 0, 0),
        (63, 32, NULL, 3, '1231', '2022-06-06 15:17:16', 1, 1);
 
-/*Table structure for table `consumer` */
+/*Table structure for table `user` */
 
-DROP TABLE IF EXISTS `consumer`;
+DROP TABLE IF EXISTS `user`;
 
-CREATE TABLE `consumer`
+CREATE TABLE `user`
 (
     `id`           int(10) unsigned NOT NULL AUTO_INCREMENT,
     `username`     varchar(255)     NOT NULL,
@@ -204,9 +204,9 @@ CREATE TABLE `consumer`
   AUTO_INCREMENT = 37
   DEFAULT CHARSET = utf8;
 
-/*Data for the table `consumer` */
+/*Data for the table `user` */
 
-insert into `consumer`(`id`, `username`, `password`, `sex`, `phone_num`, `email`, `birth`, `introduction`, `location`,
+insert into `user`(`id`, `username`, `password`, `sex`, `phone_num`, `email`, `birth`, `introduction`, `location`,
                        `avator`, `create_time`, `update_time`)
 values (1, 'Yin', '123', 0, '13776412237', 'yoona@qq.com', '2019-05-24 00:00:00', '好好吃饭', '山西',
         '/img/avatarImages/1556202448064L1.jpg', '2019-01-04 21:42:24', '2020-04-05 03:35:12'),

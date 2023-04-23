@@ -10,7 +10,7 @@ import java.util.Date;
  * 这块 现在尝试把所有有关用户的属性都放入
  **/
 @Data
-public class ConsumerRequest {
+public class UserRequest {
     private Integer id;
 
     private String username;

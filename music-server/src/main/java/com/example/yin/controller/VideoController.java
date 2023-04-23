@@ -20,7 +20,7 @@ import java.util.Objects;
  * @since 2023-04-14 10:00:29
  */
 @RestController
-@RequestMapping("video/")
+@RequestMapping("/video/")
 public class VideoController {
     /**
      * 服务对象
