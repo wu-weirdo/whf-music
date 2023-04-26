@@ -39,11 +39,19 @@
       </el-table-column>
       <el-table-column label="资源更新" width="120" align="center">
         <template v-slot="scope">
-          <el-upload :action="updateSongImg(scope.row.id)" :show-file-list="false" :on-success="handleImgSuccess" :before-upload="beforeImgUpload">
+          <el-upload :action="updateSongImg(scope.row.id)"
+                     :show-file-list="false"
+                     :on-success="handleImgSuccess"
+                     :before-upload="beforeImgUpload"
+                     :headers="uploadHeader">
             <el-button>更新图片</el-button>
           </el-upload>
           <br />
-          <el-upload :action="updateSongUrl(scope.row.id)" :show-file-list="false" :on-success="handleSongSuccess" :before-upload="beforeSongUpload">
+          <el-upload :action="updateSongUrl(scope.row.id)"
+                     :show-file-list="false"
+                     :on-success="handleSongSuccess"
+                     :before-upload="beforeSongUpload"
+                     :headers="uploadHeader">
             <el-button>更新歌曲</el-button>
           </el-upload>
         </template>
@@ -157,6 +165,10 @@ export default defineComponent({
     const BOFANG = ref(Icon.BOFANG);
     const ZANTING = ref(Icon.ZANTING);
     const breadcrumbList = computed(() => store.getters.breadcrumbList);
+    const token = computed(() => store.getters.token);
+    const uploadHeader = {
+      Authorization : token.value
+    }
 
     const isPlay = computed(() => store.getters.isPlay); // 播放状态
     const playIcon = computed(() => (isPlay.value ? ZANTING.value : BOFANG.value)); // 播放状态
@@ -296,6 +308,7 @@ export default defineComponent({
         }
       };
       req.open("post", HttpManager.attachImageUrl(`/song/add`), false);
+      req.setRequestHeader("Authorization", token.value);
       req.send(addSongForm);
       (document.getElementById("file") as HTMLFormElement).value = "";
       centerDialogVisible.value = false;
@@ -396,6 +409,7 @@ export default defineComponent({
       ZANTING,
       BOFANG,
       breadcrumbList,
+      uploadHeader,
       deleteAll,
       handleSelectionChange,
       handleCurrentChange,

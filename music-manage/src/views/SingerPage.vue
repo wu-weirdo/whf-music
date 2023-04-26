@@ -17,7 +17,11 @@
                       fit="cover" append-to-body>
             </el-image>
           </div>
-          <el-upload :action="uploadUrl(scope.row.id)" :show-file-list="false" :on-success="handleImgSuccess" :before-upload="beforeImgUpload">
+          <el-upload :action="uploadUrl(scope.row.id)"
+                     :show-file-list="false"
+                     :on-success="handleImgSuccess"
+                     :before-upload="beforeImgUpload"
+                     :headers="uploadHeader">
             <el-button>更新图片</el-button>
           </el-upload>
         </template>
@@ -142,6 +146,7 @@ import YinDelDialog from "@/components/dialog/YinDelDialog.vue";
 import { HttpManager } from "@/api/index";
 import { RouterName } from "@/enums";
 import { getBirth } from "@/utils";
+import {useStore} from "vuex";
 
 export default defineComponent({
   components: {
@@ -150,11 +155,16 @@ export default defineComponent({
   setup() {
     const { proxy } = getCurrentInstance();
     const { changeSex, routerManager, beforeImgUpload } = mixin();
+    const store = useStore();
 
     const tableData = ref([]); // 记录歌曲，用于显示
     const tempDate = ref([]); // 记录歌曲，用于搜索时能临时记录一份歌曲列表
     const pageSize = ref(5); // 页数
     const currentPage = ref(1); // 当前页
+    const token = computed(() => store.getters.token);
+    const uploadHeader = {
+      Authorization : token.value
+    }
 
     // 计算当前表格中的数据
     const data = computed(() => {
@@ -365,6 +375,7 @@ export default defineComponent({
       searchWord,
       data,
       tableData,
+      uploadHeader,
       centerDialogVisible,
       editVisible,
       delVisible,

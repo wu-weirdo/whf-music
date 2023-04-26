@@ -30,7 +30,7 @@ try {
   });
 
   HttpManager.getSongList().then((res) => {
-    songList.value = (res as ResponseBody).data.sort().slice(0, 10);
+    songList.value = (res as ResponseBody).data.sort();
   });
 
   HttpManager.getAllSinger().then((res) => {
