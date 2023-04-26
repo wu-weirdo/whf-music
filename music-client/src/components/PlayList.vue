@@ -94,6 +94,7 @@ export default defineComponent({
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 2;
     margin: 0.5rem 0;
+    text-align: center;
   }
 
   &:hover .card-img {
@@ -125,14 +126,14 @@ export default defineComponent({
 
 @media screen and (min-width: $sm) {
   .card-frame {
-    width: 18%;
+    width: 14.6%;
     margin: 0.5rem 1%;
   }
 }
 
 @media screen and (max-width: $sm) {
   .card-frame {
-    width: 46%;
+    width: 30%;
     margin: 0.5rem 2%;
   }
 }

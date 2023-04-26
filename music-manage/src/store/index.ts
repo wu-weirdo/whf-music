@@ -1,6 +1,10 @@
-import { createStore } from 'vuex'
+import { createStore } from 'vuex';
+import user from "./user";
 
 export default createStore({
+  modules: {
+    user,
+  },
   state: {
     userPic: "/img/avatorImages/user.jpg",
     isPlay: false,

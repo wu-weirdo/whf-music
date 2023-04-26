@@ -42,13 +42,19 @@ public class SongServiceImpl extends ServiceImpl<SongMapper, Song> implements So
         BeanUtils.copyProperties(addSongRequest, song);
         String pic = "/resource/img/songPic/tubiao.jpg";
         String fileName = mpfile.getOriginalFilename();
-        String filePath = System.getProperty("user.dir") + System.getProperty("file.separator")
+        String singerPath = System.getProperty("user.dir") + System.getProperty("file.separator")
                 + "resource" + System.getProperty("file.separator")
-                + "song" + System.getProperty("file.separator") + singer.getName()
-                + System.getProperty("file.separator") + addSongRequest.getIntroduction();
-        File file1 = new File(filePath);
+                + "song" + System.getProperty("file.separator") + singer.getName();
+        File file1 = new File(singerPath);
         if (!file1.exists()) {
             if (!file1.mkdir()) {
+                return R.fatal("创建文件失败");
+            }
+        }
+        String filePath = singerPath + System.getProperty("file.separator") + addSongRequest.getIntroduction();
+        File file2 = new File(filePath);
+        if (!file2.exists()) {
+            if (!file2.mkdir()) {
                 return R.fatal("创建文件失败");
             }
         }

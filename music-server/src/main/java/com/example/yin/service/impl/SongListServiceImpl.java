@@ -65,7 +65,7 @@ public class SongListServiceImpl extends ServiceImpl<SongListMapper, SongList> i
     public R addSongList(SongListRequest addSongListRequest) {
         SongList songList = new SongList();
         BeanUtils.copyProperties(addSongListRequest, songList);
-        String pic = "/img/songListPic/123.jpg";
+        String pic = "/resource/img/songListPic/123.jpg";
         songList.setPic(pic);
         if (songListMapper.insert(songList) > 0) {
             return R.success("添加成功");
@@ -77,13 +77,15 @@ public class SongListServiceImpl extends ServiceImpl<SongListMapper, SongList> i
     @Override
     public R updateSongListImg(MultipartFile avatorFile, @RequestParam("id") int id) {
         String fileName = System.currentTimeMillis() + avatorFile.getOriginalFilename();
-        String filePath = System.getProperty("user.dir") + System.getProperty("file.separator") + "img" + System.getProperty("file.separator") + "songListPic";
+        String filePath = System.getProperty("user.dir") + System.getProperty("file.separator")
+                + "resource" + System.getProperty("file.separator")
+                + "img" + System.getProperty("file.separator") + "songListPic";
         File file1 = new File(filePath);
         if (!file1.exists()) {
             file1.mkdir();
         }
         File dest = new File(filePath + System.getProperty("file.separator") + fileName);
-        String imgPath = "/img/songListPic/" + fileName;
+        String imgPath = "/resource/img/songListPic/" + fileName;
         try {
             avatorFile.transferTo(dest);
         } catch (IOException e) {

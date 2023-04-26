@@ -38,15 +38,21 @@ export default defineComponent({
       password: [{ required: true, message: "请输入密码", trigger: "blur" }],
     });
     async function submitForm() {
-      let username = ruleForm.username;
+      let userName = ruleForm.username;
       let password = ruleForm.password;
-      const result = (await HttpManager.getLoginStatus({username,password})) as ResponseBody;
+      const result = (await HttpManager.signIn({userName,password})) as ResponseBody;
       (proxy as any).$message({
         message: result.message,
         type: result.type,
       });
 
-      if (result.success) routerManager(RouterName.Info, { path: RouterName.Info });
+      if (result.success) {
+        proxy.$store.commit("setUserId", result.data.user.id);
+        proxy.$store.commit("setUsername", result.data.user.userName);
+        proxy.$store.commit("setUserPic", result.data.user.avator);
+        proxy.$store.commit("setToken", result.data.token);
+        routerManager(RouterName.Info, { path: RouterName.Info });
+      }
     }
     return {
       nusicName,

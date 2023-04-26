@@ -2,10 +2,10 @@ import {deletes, get, getBaseURL, post} from './request'
 
 const HttpManager = {
     // 获取图片信息
-    attachImageUrl: (url) => `${getBaseURL()}/${url}`,
+    attachImageUrl: (url) => `${getBaseURL()}${url}`,
     // =======================> 管理员 API 完成
-    // 是否登录成功
-    getLoginStatus: ({username, password}) => post(`admin/login/status`, {username, password}),
+    // 登录
+    signIn: ({userName,password}) => post(`login`, {userName,password}),
 
     // =======================> 用户 API 完成
     // 返回所有用户
@@ -51,6 +51,8 @@ const HttpManager = {
     }),
     // 删除歌手
     deleteSinger: (id) => deletes(`singer/delete?id=${id}`),
+    // 更新歌手图片
+    updateSingerPic:(id) => post(`/singer/avatar/update?id=${id}`),
 
     // =======================> 歌曲 API  完成
     // 返回所有歌曲

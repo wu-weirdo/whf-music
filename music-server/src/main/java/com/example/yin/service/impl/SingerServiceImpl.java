@@ -35,15 +35,16 @@ public class SingerServiceImpl extends ServiceImpl<SingerMapper, Singer> impleme
     @Override
     public R updateSingerPic(MultipartFile avatorFile, int id) {
         String fileName = System.currentTimeMillis() + avatorFile.getOriginalFilename();
-        String filePath = System.getProperty("user.dir") + System.getProperty("file.separator") + "img"
-                + System.getProperty("file.separator") + "singerPic";
+        String filePath = System.getProperty("user.dir") + System.getProperty("file.separator")
+                + "resource" + System.getProperty("file.separator")
+                + "img" + System.getProperty("file.separator") + "singerPic";
         File file1 = new File(filePath);
         if (!file1.exists()) {
             file1.mkdir();
         }
 
         File dest = new File(filePath + System.getProperty("file.separator") + fileName);
-        String imgPath = "/img/singerPic/" + fileName;
+        String imgPath = "/resource/img/singerPic/" + fileName;
         try {
             avatorFile.transferTo(dest);
         } catch (IOException e) {
@@ -77,7 +78,7 @@ public class SingerServiceImpl extends ServiceImpl<SingerMapper, Singer> impleme
     public R addSinger(SingerRequest addSingerRequest) {
         Singer singer = new Singer();
         BeanUtils.copyProperties(addSingerRequest, singer);
-        String pic = "/img/avatorImages/user.jpg";
+        String pic = "/resource/img/avatorImages/user.jpg";
         singer.setPic(pic);
         if (singerMapper.insert(singer) > 0) {
             return R.success("添加成功");
