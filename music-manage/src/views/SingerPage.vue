@@ -45,7 +45,7 @@
       </el-table-column>
       <el-table-column label="资源管理" width="120" align="center">
         <template v-slot="scope">
-          <el-button @click="goSongPage(scope.row)" style="margin-bottom: 10px">歌曲管理</el-button>
+          <el-button @click="goSongPage(scope.row)" style="margin-bottom: 10px">专辑管理</el-button>
           <br>
           <el-button @click="goVideoPage(scope.row)">视频管理</el-button>
         </template>
@@ -214,12 +214,12 @@ export default defineComponent({
         },
         {
           path: "",
-          name: "歌曲信息",
+          name: "专辑管理",
         },
       ]);
       proxy.$store.commit("setBreadcrumbList", breadcrumbList);
-      routerManager(RouterName.Song, {
-        path: RouterName.Song,
+      routerManager(RouterName.SongList, {
+        path: RouterName.SongList,
         query: { id: row.id, name: row.name },
       });
     }

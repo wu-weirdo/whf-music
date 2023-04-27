@@ -4,11 +4,15 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.yin.common.R;
 import com.example.yin.constant.Constants;
+import com.example.yin.constant.ResultEnum;
+import com.example.yin.excepetion.ServiceException;
 import com.example.yin.mapper.UserMapper;
 import com.example.yin.model.domain.User;
 import com.example.yin.model.request.UserRequest;
 import com.example.yin.security.utils.SecurityUtils;
 import com.example.yin.service.UserService;
+import com.example.yin.utils.ExceptionUtils;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +30,7 @@ import java.util.Objects;
 import static com.example.yin.constant.Constants.SALT;
 
 @Service
+@Slf4j
 public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         implements UserService {
 
@@ -33,97 +38,55 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
     private UserMapper userMapper;
 
     @Override
-    public R updateUserMsg(UserRequest updateRequest) {
+    public Boolean updateUserMsg(UserRequest updateRequest) {
         User user = new User();
         BeanUtils.copyProperties(updateRequest, user);
-        if (userMapper.updateById(user) > 0) {
-            return R.success("修改成功");
-        } else {
-            return R.error("修改失败");
-        }
+        return userMapper.updateById(user) > 0;
     }
 
     @Override
-    public R updatePassword(UserRequest updatePasswordRequest) {
+    public Boolean updatePassword(UserRequest updatePasswordRequest) {
         User user = userMapper.selectById(updatePasswordRequest.getId());
         if (Objects.isNull(user)) {
-            return R.error("用户不存在");
+            throw new ServiceException(ResultEnum.USER_NOT_EXIST);
         }
         if (!SecurityUtils.matchesPassword(updatePasswordRequest.getOldPassword(), user.getPassword())) {
-            return R.error("密码输入错误");
+            throw new ServiceException(ResultEnum.USERNAME_PASSWORD_ERROR);
         }
         String secretPassword = SecurityUtils.encryptPassword(updatePasswordRequest.getPassword());
         user.setPassword(secretPassword);
-        if (userMapper.updateById(user) > 0) {
-            return R.success("密码修改成功");
-        } else {
-            return R.error("密码修改失败");
-        }
+        return userMapper.updateById(user) > 0;
     }
 
     @Override
-    public R updateUserAvator(MultipartFile avatorFile, int id) {
+    public Boolean updateUserAvator(MultipartFile avatorFile, int id) {
         String fileName = System.currentTimeMillis() + avatorFile.getOriginalFilename();
         //路径 他这个会根据你的系统获取对应的文件分隔符
         String filePath = Constants.PROJECT_PATH + System.getProperty("file.separator") + "img" + System.getProperty("file.separator") + "avatorImages";
         File file = new File(filePath);
         if (!file.exists() && !file.mkdir()) {
-            return R.fatal("创建文件失败");
+            log.error("UserService updateUserAvator mkdir error");
+            throw new ServiceException(ResultEnum.FILE_UPLOAD_ERROR.getCode(), "图片上传失败");
         }
         File dest = new File(filePath + System.getProperty("file.separator") + fileName);
         String imgPath = "/img/avatorImages/" + fileName;
         try {
             avatorFile.transferTo(dest);
         } catch (IOException e) {
-            return R.fatal("上传失败" + e.getMessage());
+            log.error("SongService updateUserAvator error:{}", ExceptionUtils.getStackTraceMessage(e));
+            throw new ServiceException(ResultEnum.FILE_UPLOAD_ERROR.getCode(), "图片上传失败");
         }
         User user = new User();
         user.setId(id);
         user.setAvator(imgPath);
-        if (userMapper.updateById(user) > 0) {
-            return R.success("上传成功", imgPath);
-        } else {
-            return R.error("上传失败");
-        }
+        return userMapper.updateById(user) > 0;
     }
 
     @Override
-    public boolean existUser(String username) {
+    public Boolean existUser(String username) {
         QueryWrapper<User> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("user_name",username);
         return userMapper.selectCount(queryWrapper) > 0;
-    }
-
-    @Override
-    public boolean verityPasswd(String username, String password) {
-        QueryWrapper<User> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("user_name",username);
-        String secretPassword = SecurityUtils.encryptPassword(password);
-
-        queryWrapper.eq("password",secretPassword);
-        return userMapper.selectCount(queryWrapper) > 0;
-    }
-
-    // 删除用户
-    @Override
-    public R deleteUser(Integer id) {
-        if (userMapper.deleteById(id) > 0) {
-            return R.success("删除成功");
-        } else {
-            return R.error("删除失败");
-        }
-    }
-
-    @Override
-    public R allUser() {
-        return R.success(null, userMapper.selectList(null));
-    }
-
-    @Override
-    public R userOfId(Integer id) {
-        QueryWrapper<User> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("id",id);
-        return R.success(null, userMapper.selectList(queryWrapper));
     }
 
     @Override

@@ -17,4 +17,6 @@ public class SongListRequest {
     private String style;
 
     private String introduction;
+
+    private Integer singerId;
 }

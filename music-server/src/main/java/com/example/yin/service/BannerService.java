@@ -6,12 +6,17 @@ import com.example.yin.model.domain.Banner;
 import java.util.List;
 
 /**
-* @author asus
-* @description 针对表【banner】的数据库操作Service
-* @createDate 2022-06-13 13:13:42
-*/
+ * 轮播图服务
+ *
+ * @author whf
+ * @date 2023/04/27
+ */
 public interface BannerService extends IService<Banner> {
 
+    /**
+     * 获取所有轮播图
+     *
+     * @return {@code List<Banner>}
+     */
     List<Banner> getAllBanner();
-
 }

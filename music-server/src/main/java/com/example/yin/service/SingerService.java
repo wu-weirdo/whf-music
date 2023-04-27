@@ -6,19 +6,63 @@ import com.example.yin.model.domain.Singer;
 import com.example.yin.model.request.SingerRequest;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
+
 public interface SingerService extends IService<Singer> {
 
-    R addSinger (SingerRequest addSingerRequest);
+    /**
+     * 添加歌手
+     *
+     * @param addSingerRequest 添加歌手请求
+     * @return {@code Boolean}
+     */
+    Boolean addSinger(SingerRequest addSingerRequest);
 
-    R updateSingerMsg(SingerRequest updateSingerRequest);
+    /**
+     * 更新歌手信息
+     *
+     * @param updateSingerRequest 更新歌手请求
+     * @return {@code Boolean}
+     */
+    Boolean updateSingerMsg(SingerRequest updateSingerRequest);
 
-    R updateSingerPic(MultipartFile avatorFile, int id);
+    /**
+     * 更新歌手图片
+     *
+     * @param avatorFile avator文件
+     * @param id         id
+     * @return {@code Boolean}
+     */
+    Boolean updateSingerPic(MultipartFile avatorFile, int id);
 
-    R deleteSinger(Integer id);
+    /**
+     * 删除歌手
+     *
+     * @param id id
+     * @return {@code Boolean}
+     */
+    Boolean deleteSinger(Integer id);
 
-    R allSinger();
+    /**
+     * 所有歌手
+     *
+     * @return {@code List<Singer>}
+     */
+    List<Singer> allSinger();
 
-    R singerOfName(String name);
+    /**
+     * 根据歌手名称查找歌手
+     *
+     * @param name 名字
+     * @return {@code List<Singer>}
+     */
+    List<Singer> singerOfName(String name);
 
-    R singerOfSex(Integer sex);
+    /**
+     * 根据歌手性别查找歌手
+     *
+     * @param sex 性别
+     * @return {@code List<Singer>}
+     */
+    List<Singer> singerOfSex(Integer sex);
 }

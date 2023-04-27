@@ -10,21 +10,13 @@ import javax.servlet.http.HttpSession;
 
 public interface UserService extends IService<User> {
 
-    R updateUserMsg(UserRequest updateRequest);
+    Boolean updateUserMsg(UserRequest updateRequest);
 
-    R updateUserAvator(MultipartFile avatorFile, int id);
+    Boolean updateUserAvator(MultipartFile avatorFile, int id);
 
-    R updatePassword(UserRequest updatePasswordRequest);
+    Boolean updatePassword(UserRequest updatePasswordRequest);
 
-    boolean existUser(String username);
-
-    boolean verityPasswd(String username, String password);
-
-    R deleteUser(Integer id);
-
-    R allUser();
-
-    R userOfId(Integer id);
+    Boolean existUser(String username);
 
     User selectUserByUserName(String userName);
 

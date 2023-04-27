@@ -3,7 +3,10 @@ package com.example.yin.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.example.yin.common.R;
 import com.example.yin.model.domain.Video;
+import com.example.yin.model.reponse.TreeResponse;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
 
 /**
  * (Video)表服务接口
@@ -13,12 +16,12 @@ import org.springframework.web.multipart.MultipartFile;
  */
 public interface VideoService extends IService<Video> {
 
-    R addVideo(Video video, MultipartFile file);
+    Boolean addVideo(Video video, MultipartFile file);
 
-    R updatePic(MultipartFile urlFile, Integer id);
+    Boolean updatePic(MultipartFile urlFile, Integer id);
 
-    R updateVideo(MultipartFile urlFile, Integer id);
+    Boolean updateVideo(MultipartFile urlFile, Integer id);
 
-    R singerVideoTree();
+    List<TreeResponse> singerVideoTree();
 }
 

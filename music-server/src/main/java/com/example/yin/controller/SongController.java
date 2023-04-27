@@ -1,35 +1,22 @@
 package com.example.yin.controller;
 
 import com.example.yin.common.R;
+import com.example.yin.model.domain.Song;
+import com.example.yin.model.reponse.TreeResponse;
 import com.example.yin.model.request.SongRequest;
 import com.example.yin.service.SongService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.web.servlet.MultipartConfigFactory;
-import org.springframework.context.annotation.Bean;
-import org.springframework.util.unit.DataSize;
-import org.springframework.util.unit.DataUnit;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.MultipartConfigElement;
+import java.util.List;
 
 @RestController
+@RequestMapping("/song")
 public class SongController {
 
     @Autowired
     private SongService songService;
-
-
-    @Bean
-    public MultipartConfigElement multipartConfigElement() {
-        MultipartConfigFactory factory = new MultipartConfigFactory();
-        // 文件最大10M,DataUnit提供5中类型B,KB,MB,GB,TB
-        factory.setMaxFileSize(DataSize.of(100, DataUnit.MEGABYTES));
-        // 设置总上传数据总大小10M
-        factory.setMaxRequestSize(DataSize.of(100, DataUnit.MEGABYTES));
-        return factory.createMultipartConfig();
-    }
-
 
     /**
      * 添加歌曲
@@ -38,9 +25,9 @@ public class SongController {
      * @param mpfile         mpfile
      * @return {@code R}
      */
-    @PostMapping("/song/add")
-    public R addSong(SongRequest addSongRequest, @RequestParam("file") MultipartFile mpfile) {
-        return songService.addSong(addSongRequest,mpfile);
+    @PostMapping("/add")
+    public R<Boolean> addSong(SongRequest addSongRequest, @RequestParam("file") MultipartFile mpfile) {
+        return R.success(songService.addSong(addSongRequest, mpfile));
     }
 
 
@@ -50,9 +37,9 @@ public class SongController {
      * @param id id
      * @return {@code R}
      */
-    @DeleteMapping("/song/delete")
-    public R deleteSong(@RequestParam int id) {
-        return songService.deleteSong(id);
+    @DeleteMapping("/delete")
+    public R<Boolean> deleteSong(@RequestParam Integer id) {
+        return R.success(songService.deleteSong(id));
     }
 
 
@@ -62,8 +49,8 @@ public class SongController {
      * @return {@code R}
      */
     @GetMapping("/song")
-    public R allSong() {
-        return songService.allSong();
+    public R<List<Song>> allSong() {
+        return R.success(songService.allSong());
     }
 
 
@@ -73,9 +60,9 @@ public class SongController {
      * @param id id
      * @return {@code R}
      */
-    @GetMapping("/song/detail")
-    public R songOfId(@RequestParam int id) {
-        return songService.songOfId(id);
+    @GetMapping("/detail")
+    public R<List<Song>> songOfId(@RequestParam Integer id) {
+        return R.success(songService.songOfId(id));
     }
 
     /**
@@ -84,9 +71,9 @@ public class SongController {
      * @param singerId 歌手id
      * @return {@code R}
      */
-    @GetMapping("/song/singer/detail")
-    public R songOfSingerId(@RequestParam int singerId) {
-        return songService.songOfSingerId(singerId);
+    @GetMapping("/singer/detail")
+    public R<List<Song>> songOfSingerId(@RequestParam Integer singerId) {
+        return R.success(songService.songOfSingerId(singerId));
     }
 
     /**
@@ -95,9 +82,9 @@ public class SongController {
      * @param singerId 歌手id
      * @return {@code R}
      */
-    @GetMapping("/song/singer/detail/tree")
-    public R songTreeOfSingerId(@RequestParam int singerId) {
-        return songService.songTreeOfSingerId(singerId);
+    @GetMapping("/singer/detail/tree")
+    public R<List<TreeResponse>> songTreeOfSingerId(@RequestParam Integer singerId) {
+        return R.success(songService.songTreeOfSingerId(singerId));
     }
 
     /**
@@ -106,9 +93,9 @@ public class SongController {
      * @param name 名字
      * @return {@code R}
      */
-    @GetMapping("/song/singerName/detail")
-    public R songOfSingerName(@RequestParam String name) {
-        return songService.songOfSingerName('%' + name + '%');
+    @GetMapping("/singerName/detail")
+    public R<List<Song>> songOfSingerName(@RequestParam String name) {
+        return R.success(songService.songOfSingerName(name));
     }
 
     /**
@@ -117,9 +104,9 @@ public class SongController {
      * @param updateSongRequest 请求更新歌曲
      * @return {@code R}
      */
-    @PostMapping("/song/update")
-    public R updateSongMsg(@RequestBody SongRequest updateSongRequest) {
-        return songService.updateSongMsg(updateSongRequest);
+    @PostMapping("/update")
+    public R<Boolean> updateSongMsg(@RequestBody SongRequest updateSongRequest) {
+        return R.success(songService.updateSongMsg(updateSongRequest));
     }
 
 
@@ -130,9 +117,9 @@ public class SongController {
      * @param id      id
      * @return {@code R}
      */
-    @PostMapping("/song/img/update")
-    public R updateSongPic(@RequestParam("file") MultipartFile urlFile, @RequestParam("id") int id) {
-        return songService.updateSongPic(urlFile, id);
+    @PostMapping("/img/update")
+    public R<Boolean> updateSongPic(@RequestParam("file") MultipartFile urlFile, @RequestParam("id") Integer id) {
+        return R.success(songService.updateSongPic(urlFile, id));
     }
 
     /**
@@ -142,8 +129,8 @@ public class SongController {
      * @param id      id
      * @return {@code R}
      */
-    @PostMapping("/song/url/update")
-    public R updateSongUrl(@RequestParam("file") MultipartFile urlFile, @RequestParam("id") int id) {
-        return songService.updateSongUrl(urlFile, id);
+    @PostMapping("/url/update")
+    public R<Boolean> updateSongUrl(@RequestParam("file") MultipartFile urlFile, @RequestParam("id") Integer id) {
+        return R.success(songService.updateSongUrl(urlFile, id));
     }
 }

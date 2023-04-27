@@ -5,16 +5,48 @@ import com.example.yin.common.R;
 import com.example.yin.model.domain.Comment;
 import com.example.yin.model.request.CommentRequest;
 
+import java.util.List;
+
 public interface CommentService extends IService<Comment> {
 
-    R addComment(CommentRequest addCommentRequest);
+    /**
+     * 添加评论
+     *
+     * @param addCommentRequest 添加评论请求
+     * @return {@code Boolean}
+     */
+    Boolean addComment(CommentRequest addCommentRequest);
 
-    R updateCommentMsg(CommentRequest upCommentRequest);
+    /**
+     * 点赞
+     *
+     * @param upCommentRequest 了评论请求
+     * @return {@code Boolean}
+     */
+    Boolean updateCommentMsg(CommentRequest upCommentRequest);
 
-    R deleteComment(Integer id);
+    /**
+     * 删除评论
+     *
+     * @param id id
+     * @return {@code Boolean}
+     */
+    Boolean deleteComment(Integer id);
 
-    R commentOfSongId(Integer songId);
+    /**
+     * 获得指定歌曲 ID 的评论列表
+     *
+     * @param songId 歌id
+     * @return {@code List<Comment>}
+     */
+    List<Comment> commentOfSongId(Integer songId);
 
-    R commentOfSongListId(Integer songListId);
+    /**
+     * 获得指定歌单 ID 的评论列表
+     *
+     * @param songListId 歌曲列表id
+     * @return {@code List<Comment>}
+     */
+    List<Comment> commentOfSongListId(Integer songListId);
 
 }

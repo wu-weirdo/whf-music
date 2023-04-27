@@ -13,7 +13,7 @@
           <img :src="attachImageUrl(scope.row.avator)" style="width: 80px" />
         </template>
       </el-table-column>
-      <el-table-column label="用户名" prop="username" width="80" align="center"></el-table-column>
+      <el-table-column label="用户名" prop="userName" width="80" align="center"></el-table-column>
       <el-table-column label="性别" width="50" align="center">
         <template v-slot="scope">
           <div>{{ changeSex(scope.row.sex) }}</div>

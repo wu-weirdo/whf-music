@@ -51,8 +51,8 @@ export default defineComponent({
         proxy.$store.commit("setUsername", result.data.user.userName);
         proxy.$store.commit("setUserPic", result.data.user.avator);
         proxy.$store.commit("setToken", result.data.token);
-        routerManager(RouterName.Info, { path: RouterName.Info });
       }
+      if (result.success) routerManager(RouterName.Info, { path: RouterName.Info });
     }
     return {
       nusicName,

@@ -4,6 +4,7 @@ package com.example.yin.controller;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.example.yin.common.R;
 import com.example.yin.model.domain.Video;
+import com.example.yin.model.reponse.TreeResponse;
 import com.example.yin.service.VideoService;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -35,11 +36,11 @@ public class VideoController {
      * @return 所有数据
      */
     @PostMapping("list")
-    public R selectAll(@RequestBody Video video) {
+    public R<List<Video>> selectAll(@RequestBody Video video) {
         QueryWrapper<Video> queryWrapper = new QueryWrapper<>(video);
         queryWrapper.eq(Objects.nonNull(video.getName()), "name", video.getName());
         queryWrapper.eq(Objects.nonNull(video.getSingerId()), "singer_id", video.getSingerId());
-        return R.success(null, this.videoService.list(queryWrapper));
+        return R.success(this.videoService.list(queryWrapper));
     }
 
     /**
@@ -49,8 +50,8 @@ public class VideoController {
      * @return 单条数据
      */
     @GetMapping("detail")
-    public R selectOne(@RequestParam Serializable id) {
-        return R.success(null, this.videoService.getById(id));
+    public R<Video> selectOne(@RequestParam Serializable id) {
+        return R.success(this.videoService.getById(id));
     }
 
     /**
@@ -60,8 +61,8 @@ public class VideoController {
      * @return 新增结果
      */
     @PostMapping("add")
-    public R insert(@RequestBody Video video, @RequestParam("file") MultipartFile file) {
-        return this.videoService.addVideo(video, file);
+    public R<Boolean> insert(@RequestBody Video video, @RequestParam("file") MultipartFile file) {
+        return R.success(this.videoService.addVideo(video, file));
     }
 
     /**
@@ -71,9 +72,8 @@ public class VideoController {
      * @return 修改结果
      */
     @PostMapping("update")
-    public R update(@RequestBody Video video) {
-        boolean result = this.videoService.updateById(video);
-        return R.success(result ? "修改成功" : "修改失败", result);
+    public R<Boolean> update(@RequestBody Video video) {
+        return R.success(this.videoService.updateById(video));
     }
 
     /**
@@ -83,9 +83,8 @@ public class VideoController {
      * @return 删除结果
      */
     @GetMapping("delete")
-    public R delete(@RequestParam("idList") List<Long> idList) {
-        boolean result = this.videoService.removeByIds(idList);
-        return R.success(result ? "删除成功" : "删除失败", result);
+    public R<Boolean> delete(@RequestParam("idList") List<Long> idList) {
+        return R.success(this.videoService.removeByIds(idList));
     }
 
     /**
@@ -96,8 +95,8 @@ public class VideoController {
      * @return {@code R}
      */
     @PostMapping("img/update")
-    public R updatePic(@RequestParam("file") MultipartFile urlFile, @RequestParam("id") Integer id) {
-        return videoService.updatePic(urlFile, id);
+    public R<Boolean> updatePic(@RequestParam("file") MultipartFile urlFile, @RequestParam("id") Integer id) {
+        return R.success(videoService.updatePic(urlFile, id));
     }
 
     /**
@@ -108,8 +107,8 @@ public class VideoController {
      * @return {@code R}
      */
     @PostMapping("url/update")
-    public R updateVideo(@RequestParam("file") MultipartFile urlFile, @RequestParam("id") Integer id) {
-        return videoService.updateVideo(urlFile, id);
+    public R<Boolean> updateVideo(@RequestParam("file") MultipartFile urlFile, @RequestParam("id") Integer id) {
+        return  R.success(videoService.updateVideo(urlFile, id));
     }
 
     /**
@@ -118,8 +117,8 @@ public class VideoController {
      * @return {@code R}
      */
     @GetMapping("tree")
-    public R singerVideoTree() {
-        return videoService.singerVideoTree();
+    public R<List<TreeResponse>> singerVideoTree() {
+        return  R.success(videoService.singerVideoTree());
     }
 }
 

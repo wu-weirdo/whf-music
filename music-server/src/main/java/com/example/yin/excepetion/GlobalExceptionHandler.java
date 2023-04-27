@@ -49,10 +49,10 @@ public class GlobalExceptionHandler {
      * 业务异常
      */
     @ExceptionHandler(ServiceException.class)
-    public R handleServiceException(ServiceException e, HttpServletRequest request) {
+    public R<String> handleServiceException(ServiceException e, HttpServletRequest request) {
         log.error(e.getMessage(), e);
         Integer code = e.getCode();
-        return Objects.nonNull(code) ? R.error(code, ExceptionUtils.getStackTraceMessage(e)) : R.error(e.getMessage());
+        return Objects.nonNull(code) ? R.error(code, e.getMessage()) : R.error(e.getMessage());
     }
 
     /**

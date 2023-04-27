@@ -31,7 +31,7 @@ const HttpManager = {
 
     // =======================> 歌手 API 完成
     // 返回所有歌手
-    getAllSinger: () => get(`singer`),
+    getAllSinger: () => get(`singer/list`),
     // 添加歌手
     setSinger: ({name, sex, birth, location, introduction}) => post(`singer/add`, {
         name,
@@ -56,7 +56,7 @@ const HttpManager = {
 
     // =======================> 歌曲 API  完成
     // 返回所有歌曲
-    getAllSong: () => get(`song`),
+    getAllSong: () => get(`song/list`),
     // 返回指定歌手ID的歌曲
     getSongOfSingerId: (id) => get(`song/singer/detail?singerId=${id}`),
     // 返回指定歌手ID的歌曲树
@@ -82,7 +82,7 @@ const HttpManager = {
     // 添加歌单t
     setSongList: ({title, introduction, style}) => post(`songList/add`, {title, introduction, style}),
     // 获取全部歌单
-    getSongList: () => get(`songList`),
+    getSongList: (singerId, singerName) => post(`songList/list`, {singerId, singerName}),
     // 更新歌单信息
     updateSongListMsg: ({id, title, introduction, style}) => post(`songList/update`, {id, title, introduction, style}),
     // 删除歌单

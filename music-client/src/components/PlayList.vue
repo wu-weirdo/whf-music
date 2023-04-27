@@ -1,5 +1,5 @@
 <template>
-  <div class="play-list" style="height: 660px">
+  <div class="play-list">
     <div class="play-title" v-if="title">{{ title }}</div>
     <ul class="play-body">
       <li class="card-frame" v-for="(item, index) in playList" :key="index">

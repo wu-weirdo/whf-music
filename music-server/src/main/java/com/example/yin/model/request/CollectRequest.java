@@ -2,6 +2,7 @@ package com.example.yin.model.request;
 
 import lombok.Data;
 
+import javax.validation.constraints.NotNull;
 import java.util.Date;
 
 /**
@@ -10,14 +11,17 @@ import java.util.Date;
  **/
 @Data
 public class CollectRequest {
-    private Integer id;
 
+    @NotNull(message = "用户id不能为空")
     private Integer userId;
 
+    @NotNull(message = "类型不能为空")
     private Byte type;
 
+    @NotNull(message = "歌曲id不能为空")
     private Integer songId;
 
+    @NotNull(message = "专辑id不能为空")
     private Integer songListId;
 
     private Date createTime;

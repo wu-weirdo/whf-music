@@ -3,67 +3,75 @@ package com.example.yin.common;
 import com.example.yin.constant.ResultEnum;
 import lombok.Data;
 
+import java.io.Serializable;
+
 /**
  * @Author 祝英台炸油条
  * @Time : 2022/6/4 19:04
  **/
 @Data
-public class R {
+public class R<T> implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     private int code;
 
     private String message;
 
-    private String type;
+    private T data;
 
     private Boolean success;
 
-    private Object data;
+    private String type;
 
-    public static R success(String message) {
-        R r = new R();
-        r.setCode(ResultEnum.SUCCESS.getCode());
-        r.setMessage(message);
-        r.setSuccess(true);
-        r.setType("success");
-        r.setData(null);
-        return r;
+    public static <T> R<T> success() {
+        return restResult(null, ResultEnum.SUCCESS.getCode(), null, true);
     }
 
-    public static R success(String message, Object data) {
-        R r = success(message);
-        r.setData(data);
-        return r;
+    public static <T> R<T> success(T data) {
+        return restResult(data, ResultEnum.SUCCESS.getCode(), null, true);
     }
 
-    public static R warning(String message) {
-        R r = error(message);
-        r.setType("warning");
-        return r;
+    public static <T> R<T> success(T data, String msg) {
+        return restResult(data, ResultEnum.SUCCESS.getCode(), msg, true);
     }
 
-    public static R error(String message) {
-        R r = new R();
-        r.setCode(ResultEnum.ERROR.getCode());
-        r.setMessage(message);
-        r.setSuccess(false);
-        r.setType("error");
-        return r;
+    public static <T> R<T> error() {
+        return restResult(null, ResultEnum.ERROR.getCode(), null, false);
     }
 
-    public static R error(Integer code, String message) {
-        R r = new R();
-        r.setCode(code);
-        r.setMessage(message);
-        r.setSuccess(false);
-        r.setType("error");
-        r.setData(null);
-        return r;
+    public static <T> R<T> error(String msg) {
+        return restResult(null, ResultEnum.ERROR.getCode(), msg, false);
     }
 
-    public static R fatal(String message) {
-        R r = error(message);
-        r.setType("fatal");
-        return r;
+    public static <T> R<T> error(Integer code, String msg) {
+        return restResult(null, ResultEnum.ERROR.getCode(), msg, false);
     }
+
+    public static <T> R<T> fatal(String msg) {
+        return restResult(null, ResultEnum.ERROR.getCode(), msg, false);
+    }
+
+    public static <T> R<T> fatal(T data) {
+        return restResult(data, ResultEnum.ERROR.getCode(), null, false);
+    }
+
+    public static <T> R<T> fatal(T data, String msg) {
+        return restResult(data, ResultEnum.ERROR.getCode(), msg, false);
+    }
+
+    private static <T> R<T> restResult(T data, int code, String msg, boolean success) {
+        R<T> apiResult = new R<>();
+        apiResult.setCode(code);
+        apiResult.setData(data);
+        apiResult.setMessage(msg);
+        apiResult.setSuccess(success);
+        if (success) {
+            apiResult.setType("success");
+        } else {
+            apiResult.setType("error");
+        }
+        return apiResult;
+    }
+
 }

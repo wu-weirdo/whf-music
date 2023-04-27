@@ -1,44 +1,79 @@
 package com.example.yin.controller;
 
 import com.example.yin.common.R;
+import com.example.yin.model.domain.Comment;
 import com.example.yin.model.request.CommentRequest;
 import com.example.yin.service.CommentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
+/**
+ * 评论控制器
+ *
+ * @author whf
+ * @date 2023/04/27
+ */
 @RestController
+@RequestMapping("/comment")
 public class CommentController {
+
     @Autowired
     private CommentService commentService;
 
-
-    // 提交评论
-    @PostMapping("/comment/add")
-    public R addComment(@RequestBody CommentRequest addCommentRequest) {
-        return commentService.addComment(addCommentRequest);
+    /**
+     * 添加评论
+     *
+     * @param addCommentRequest 添加评论请求
+     * @return {@code R}
+     */
+    @PostMapping("/add")
+    public R<Boolean> addComment(@RequestBody CommentRequest addCommentRequest) {
+        return R.success(commentService.addComment(addCommentRequest));
     }
 
-    // 删除评论
-    @GetMapping("/comment/delete")
-    public R deleteComment(@RequestParam Integer id) {
-        return commentService.deleteComment(id);
+    /**
+     * 删除评论
+     *
+     * @param id id
+     * @return {@code R}
+     */
+    @GetMapping("/delete")
+    public R<Boolean> deleteComment(@RequestParam Integer id) {
+        return R.success(commentService.deleteComment(id));
     }
 
-    // 获得指定歌曲 ID 的评论列表
-    @GetMapping("/comment/song/detail")
-    public R commentOfSongId(@RequestParam Integer songId) {
-        return commentService.commentOfSongId(songId);
+    /**
+     * 获得指定歌曲 ID 的评论列表
+     *
+     * @param songId 歌id
+     * @return {@code R}
+     */
+    @GetMapping("/song/detail")
+    public R<List<Comment>> commentOfSongId(@RequestParam Integer songId) {
+        return R.success(commentService.commentOfSongId(songId));
     }
 
-    // 获得指定歌单 ID 的评论列表
-    @GetMapping("/comment/songList/detail")
-    public R commentOfSongListId(@RequestParam Integer songListId) {
-        return commentService.commentOfSongListId(songListId);
+    /**
+     * 获得指定歌单 ID 的评论列表
+     *
+     * @param songListId 歌曲列表id
+     * @return {@code R}
+     */
+    @GetMapping("/songList/detail")
+    public R<List<Comment>> commentOfSongListId(@RequestParam Integer songListId) {
+        return R.success(commentService.commentOfSongListId(songListId));
     }
 
-    // 点赞
-    @PostMapping("/comment/like")
-    public R commentOfLike(@RequestBody CommentRequest upCommentRequest) {
-        return commentService.updateCommentMsg(upCommentRequest);
+    /**
+     * 点赞
+     *
+     * @param upCommentRequest 了评论请求
+     * @return {@code R}
+     */
+    @PostMapping("/like")
+    public R<Boolean> commentOfLike(@RequestBody CommentRequest upCommentRequest) {
+        return R.success(commentService.updateCommentMsg(upCommentRequest));
     }
 }

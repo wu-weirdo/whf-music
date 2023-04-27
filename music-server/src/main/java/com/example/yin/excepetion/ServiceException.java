@@ -1,5 +1,6 @@
 package com.example.yin.excepetion;
 
+import com.example.yin.constant.ResultEnum;
 import lombok.Data;
 
 /**
@@ -22,5 +23,10 @@ public class ServiceException extends RuntimeException {
     public ServiceException(Integer code, String message) {
         this.code = code;
         this.message = message;
+    }
+
+    public ServiceException(ResultEnum resultEnum) {
+        this.code = resultEnum.getCode();
+        this.message = resultEnum.getMessage();
     }
 }

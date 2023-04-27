@@ -1,16 +1,20 @@
 package com.example.yin.controller;
 
 import com.example.yin.common.R;
+import com.example.yin.model.domain.Banner;
 import com.example.yin.service.BannerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
+
 /**
- * @Author 祝英台炸油条
- * @Time : 2022/6/13 13:16
- **/
+ * @author whf
+ * @date 2023/04/27
+ */
 @RestController
 @RequestMapping("/banner")
 public class BannerController {
@@ -18,8 +22,13 @@ public class BannerController {
     @Autowired
     private BannerService bannerService;
 
-    @GetMapping("/getAllBanner")
-    public R getAllBanner(){
-        return R.success("成功获取轮播图与",bannerService.getAllBanner());
+    /**
+     * 获取所有轮播图
+     *
+     * @return {@code R<List<Banner>>}
+     */
+    @GetMapping("/list")
+    public R<List<Banner>> getAllBanner(){
+        return R.success(bannerService.getAllBanner());
     }
 }

@@ -1,8 +1,10 @@
 package com.example.yin.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.yin.common.R;
+import com.example.yin.excepetion.ServiceException;
 import com.example.yin.mapper.SongListMapper;
 import com.example.yin.model.domain.SongList;
 import com.example.yin.model.request.SongListRequest;
@@ -15,6 +17,10 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
+import java.util.Objects;
+
+import static com.example.yin.constant.ResultEnum.FILE_UPLOAD_ERROR;
 
 @Service
 public class SongListServiceImpl extends ServiceImpl<SongListMapper, SongList> implements SongListService {
@@ -23,59 +29,37 @@ public class SongListServiceImpl extends ServiceImpl<SongListMapper, SongList> i
     private SongListMapper songListMapper;
 
     @Override
-    public R updateSongListMsg(SongListRequest updateSongListRequest) {
+    public Boolean updateSongListMsg(SongListRequest updateSongListRequest) {
         SongList songList = new SongList();
         BeanUtils.copyProperties(updateSongListRequest, songList);
-        if (songListMapper.updateById(songList) > 0) {
-            return R.success("修改成功");
-        } else {
-            return R.error("修改失败");
-        }
+        return songListMapper.updateById(songList) > 0;
     }
 
     @Override
-    public R deleteSongList(Integer id) {
-        if (songListMapper.deleteById(id) > 0) {
-            return R.success("删除成功");
-        } else {
-            return R.error("删除失败");
-        }
+    public Boolean deleteSongList(Integer id) {
+        return songListMapper.deleteById(id) > 0;
     }
 
     @Override
-    public R allSongList() {
-        return R.success(null, songListMapper.selectList(null));
+    public List<SongList> getSongList(SongListRequest request) {
+        LambdaQueryWrapper<SongList> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(Objects.nonNull(request.getSingerId()), SongList::getSingerId, request.getSingerId());
+        wrapper.like(Objects.nonNull(request.getTitle()), SongList::getTitle, request.getTitle());
+        wrapper.like(Objects.nonNull(request.getStyle()), SongList::getStyle, request.getStyle());
+        return songListMapper.selectList(wrapper);
     }
 
     @Override
-    public R likeTitle(String title) {
-        QueryWrapper<SongList> queryWrapper = new QueryWrapper<>();
-        queryWrapper.like("title",title);
-        return R.success(null, songListMapper.selectList(queryWrapper));
-    }
-
-    @Override
-    public R likeStyle(String style) {
-        QueryWrapper<SongList> queryWrapper = new QueryWrapper<>();
-        queryWrapper.like("style",style);
-        return R.success(null, songListMapper.selectList(queryWrapper));
-    }
-
-    @Override
-    public R addSongList(SongListRequest addSongListRequest) {
+    public Boolean addSongList(SongListRequest addSongListRequest) {
         SongList songList = new SongList();
         BeanUtils.copyProperties(addSongListRequest, songList);
         String pic = "/resource/img/songListPic/123.jpg";
         songList.setPic(pic);
-        if (songListMapper.insert(songList) > 0) {
-            return R.success("添加成功");
-        } else {
-            return R.error("添加失败");
-        }
+        return songListMapper.insert(songList) > 0;
     }
 
     @Override
-    public R updateSongListImg(MultipartFile avatorFile, @RequestParam("id") int id) {
+    public Boolean updateSongListImg(MultipartFile avatorFile, @RequestParam("id") int id) {
         String fileName = System.currentTimeMillis() + avatorFile.getOriginalFilename();
         String filePath = System.getProperty("user.dir") + System.getProperty("file.separator")
                 + "resource" + System.getProperty("file.separator")
@@ -89,15 +73,11 @@ public class SongListServiceImpl extends ServiceImpl<SongListMapper, SongList> i
         try {
             avatorFile.transferTo(dest);
         } catch (IOException e) {
-            return R.fatal("上传失败" + e.getMessage());
+            throw new ServiceException(FILE_UPLOAD_ERROR.getCode(), FILE_UPLOAD_ERROR.getMessage());
         }
         SongList songList = new SongList();
         songList.setId(id);
         songList.setPic(imgPath);
-        if (songListMapper.updateById(songList) > 0) {
-            return R.success("上传成功", imgPath);
-        } else {
-            return R.error("上传失败");
-        }
+        return songListMapper.updateById(songList) > 0;
     }
 }

@@ -15,6 +15,8 @@ public class Song {
 
     private Integer singerId;
 
+    private Integer songListId;
+
     private String name;
 
     private String introduction;

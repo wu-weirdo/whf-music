@@ -4,6 +4,7 @@
   <resultMap id="BaseResultMap" type="com.example.yin.model.domain.Song">
     <id column="id" property="id" jdbcType="INTEGER" />
     <result column="singer_id" property="singerId" jdbcType="INTEGER" />
+    <result column="song_list_id" property="songListId" jdbcType="INTEGER" />
     <result column="name" property="name" jdbcType="VARCHAR" />
     <result column="introduction" property="introduction" jdbcType="VARCHAR" />
     <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
@@ -15,7 +16,7 @@
     <result column="lyric" property="lyric" jdbcType="LONGVARCHAR" />
   </resultMap>
   <sql id="Base_Column_List">
-    id, singer_id, name, introduction, create_time, update_time, pic
+    id, singer_id, song_list_id, name, introduction, create_time, update_time, pic
   </sql>
   <sql id="Blob_Column_List">
     lyric

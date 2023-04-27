@@ -19,13 +19,9 @@ import java.util.List;
 public class BannerServiceImpl extends ServiceImpl<BannerMapper, Banner>
         implements BannerService {
 
-    @Autowired
-    private BannerMapper bannerMapper;
-
-    @Cacheable(value = "banner", key = "'list'")  //放在缓存中 redis 是以key-value进行存储的
+    @Cacheable(value = "banner", key = "'banner'")
     @Override
     public List<Banner> getAllBanner() {
-        System.out.println("没有走缓存");
-        return bannerMapper.selectList(null);
+        return baseMapper.selectList(null);
     }
 }

@@ -30,7 +30,7 @@ const HttpManager = {
 
   // =======================> 歌手 API  完成
   // 返回所有歌手
-  getAllSinger: () => get("singer"),
+  getAllSinger: () => get("singer/list"),
   // 通过性别对歌手分类
   getSingerOfSex: (sex) => get(`singer/sex/detail?sex=${sex}`),
 
@@ -48,7 +48,7 @@ const HttpManager = {
   // 提交评分
   setRank: ({songListId,consumerId,score}) => post(`rankList/add`, {songListId,consumerId,score}),
   // 获取指定歌单的评分
-  getRankOfSongListId: (songListId) => get(`rankList?songListId=${songListId}`),
+  getRankOfSongListId: (songListId) => get(`rankList/list?songListId=${songListId}`),
   // 获取指定用户的歌单评分
   getUserRank: (consumerId, songListId) => get(`/rankList/user?consumerId=${consumerId}&songListId=${songListId}`),
 
@@ -89,7 +89,7 @@ const HttpManager = {
   insertUserSupport:({commentId,userId}) => post(`userSupport/insert`, {commentId,userId}),
 
   //获取所有的海报
-  getBannerList: () => get("banner/getAllBanner"),
+  getBannerList: () => get("banner/list"),
 
   //歌手视频树
   getSingerVideoTree: () => get("video/tree"),

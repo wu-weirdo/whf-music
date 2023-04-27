@@ -1,4 +1,9 @@
 <template>
+  <el-breadcrumb class="crumbs" separator="/">
+    <el-breadcrumb-item v-for="item in breadcrumbList" :key="item.name" :to="{ path: item.path, query: item.query }">
+      {{ item.name }}
+    </el-breadcrumb-item>
+  </el-breadcrumb>
   <div class="container">
     <div class="handle-box">
       <el-button @click="deleteAll">批量删除</el-button>
@@ -120,11 +125,13 @@ export default defineComponent({
     const tempDate = ref([]); // 记录歌曲，用于搜索时能临时记录一份歌曲列表
     const pageSize = ref(5); // 页数
     const currentPage = ref(1); // 当前页
-
+    const breadcrumbList = computed(() => store.getters.breadcrumbList);
     const token = computed(() => store.getters.token);
     const uploadHeader = {
       Authorization : token.value
     }
+    const singerId = ref("");
+    const singerName = ref("");
 
     // 计算当前表格中的数据
     const data = computed(() => {
@@ -145,13 +152,15 @@ export default defineComponent({
       }
     });
 
+    singerId.value = proxy.$route.query.id as string;
+    singerName.value = proxy.$route.query.name as string;
     getData();
 
     // 获取歌单信息
     async function getData() {
       tableData.value = [];
       tempDate.value = [];
-      const result = (await HttpManager.getSongList()) as ResponseBody;
+      const result = (await HttpManager.getSongList(singerId.value, null)) as ResponseBody;
       tableData.value = result.data;
       tempDate.value = result.data;
       currentPage.value = 1;
@@ -181,23 +190,31 @@ export default defineComponent({
     function goContentPage(id) {
       const breadcrumbList = reactive([
         {
+          path: RouterName.Singer,
+          name: "歌手管理",
+        },
+        {
           path: RouterName.SongList,
-          name: "歌单管理",
+          name: "专辑管理",
         },
         {
           path: "",
-          name: "歌单内容",
+          name: "专辑内容",
         },
       ]);
       proxy.$store.commit("setBreadcrumbList", breadcrumbList);
-      routerManager(RouterName.ListSong, {path: RouterName.ListSong, query: {id}});
+      routerManager(RouterName.Song, {path: RouterName.Song, query: {id}});
     }
 
     function goCommentPage(id) {
       const breadcrumbList = reactive([
         {
+          path: RouterName.Singer,
+          name: "歌手管理",
+        },
+        {
           path: RouterName.SongList,
-          name: "歌单管理",
+          name: "专辑管理",
         },
         {
           path: "",
@@ -322,6 +339,7 @@ export default defineComponent({
       registerForm,
       editForm,
       uploadHeader,
+      breadcrumbList,
       addsongList,
       deleteAll,
       handleSelectionChange,

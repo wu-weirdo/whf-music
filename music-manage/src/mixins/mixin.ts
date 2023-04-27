@@ -87,6 +87,7 @@ export default function () {
       case RouterName.Comment:
       case RouterName.Consumer:
       case RouterName.Collect:
+      case RouterName.SongList:
         proxy.$router.push({ path: options.path, query: options.query });
         break;
       case RouterName.Home:
@@ -94,7 +95,6 @@ export default function () {
       case RouterName.SignOut:
       case RouterName.Info:
       case RouterName.Singer:
-      case RouterName.SongList:
       case RouterName.Error:
       default:
         proxy.$router.push({ path: options.path });

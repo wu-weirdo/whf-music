@@ -3,10 +3,14 @@ package com.example.yin.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.yin.common.R;
+import com.example.yin.constant.ResultEnum;
+import com.example.yin.excepetion.ServiceException;
 import com.example.yin.mapper.SingerMapper;
 import com.example.yin.model.domain.Singer;
 import com.example.yin.model.request.SingerRequest;
 import com.example.yin.service.SingerService;
+import com.example.yin.utils.ExceptionUtils;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,26 +18,24 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 
 @Service
+@Slf4j
 public class SingerServiceImpl extends ServiceImpl<SingerMapper, Singer> implements SingerService {
 
     @Autowired
     private SingerMapper singerMapper;
 
     @Override
-    public R updateSingerMsg(SingerRequest updateSingerRequest) {
+    public Boolean updateSingerMsg(SingerRequest updateSingerRequest) {
         Singer singer = new Singer();
         BeanUtils.copyProperties(updateSingerRequest, singer);
-        if (singerMapper.updateById(singer) > 0) {
-            return R.success("修改成功");
-        } else {
-            return R.error("修改失败");
-        }
+       return singerMapper.updateById(singer) > 0;
     }
 
     @Override
-    public R updateSingerPic(MultipartFile avatorFile, int id) {
+    public Boolean updateSingerPic(MultipartFile avatorFile, int id) {
         String fileName = System.currentTimeMillis() + avatorFile.getOriginalFilename();
         String filePath = System.getProperty("user.dir") + System.getProperty("file.separator")
                 + "resource" + System.getProperty("file.separator")
@@ -48,56 +50,45 @@ public class SingerServiceImpl extends ServiceImpl<SingerMapper, Singer> impleme
         try {
             avatorFile.transferTo(dest);
         } catch (IOException e) {
-            return R.fatal("上传失败" + e.getMessage());
+            log.error("SingerService updateSingerPic error:{}", ExceptionUtils.getStackTraceMessage(e));
+            throw new ServiceException(ResultEnum.FILE_UPLOAD_ERROR.getCode(), "更新歌手图片失败");
         }
         Singer singer = new Singer();
         singer.setId(id);
         singer.setPic(imgPath);
-        if (singerMapper.updateById(singer) > 0) {
-            return R.success("上传成功", imgPath);
-        } else {
-            return R.error("上传失败");
-        }
+        return singerMapper.updateById(singer) > 0;
     }
 
     @Override
-    public R deleteSinger(Integer id) {
-        if (singerMapper.deleteById(id) > 0) {
-            return R.success("删除成功");
-        } else {
-            return R.error("删除失败");
-        }
+    public Boolean deleteSinger(Integer id) {
+        return singerMapper.deleteById(id) > 0;
     }
 
     @Override
-    public R allSinger() {
-        return R.success(null, singerMapper.selectList(null));
+    public List<Singer> allSinger() {
+        return singerMapper.selectList(null);
     }
 
     @Override
-    public R addSinger(SingerRequest addSingerRequest) {
+    public Boolean addSinger(SingerRequest addSingerRequest) {
         Singer singer = new Singer();
         BeanUtils.copyProperties(addSingerRequest, singer);
         String pic = "/resource/img/avatorImages/user.jpg";
         singer.setPic(pic);
-        if (singerMapper.insert(singer) > 0) {
-            return R.success("添加成功");
-        } else {
-            return R.error("添加失败");
-        }
+        return singerMapper.insert(singer) > 0;
     }
 
     @Override
-    public R singerOfName(String name) {
+    public List<Singer> singerOfName(String name) {
         QueryWrapper<Singer> queryWrapper = new QueryWrapper<>();
         queryWrapper.like("name",name);
-        return R.success(null, singerMapper.selectList(queryWrapper));
+        return singerMapper.selectList(queryWrapper);
     }
 
     @Override
-    public R singerOfSex(Integer sex) {
+    public List<Singer> singerOfSex(Integer sex) {
         QueryWrapper<Singer> queryWrapper = new QueryWrapper<>();
         queryWrapper.like("sex",sex);
-        return R.success(null, singerMapper.selectList(queryWrapper));
+        return singerMapper.selectList(queryWrapper);
     }
 }

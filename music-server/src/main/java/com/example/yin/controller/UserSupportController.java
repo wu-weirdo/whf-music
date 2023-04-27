@@ -21,17 +21,17 @@ public class UserSupportController {
     UserSupportService userSupportService;
 
     @PostMapping("/test")
-    public R isUserSupportComment(@RequestBody UserSupportRequest userSupportRequest) {
-        return userSupportService.isUserSupportComment(userSupportRequest);
+    public R<Boolean> isUserSupportComment(@RequestBody UserSupportRequest request) {
+        return R.success(userSupportService.isUserSupportComment(request));
     }
 
     @PostMapping("/insert")
-    public R insertCommentSupport(@RequestBody UserSupportRequest userSupportRequest) {
-        return userSupportService.insertCommentSupport(userSupportRequest);
+    public R<Boolean> insertCommentSupport(@RequestBody UserSupportRequest request) {
+        return R.success(userSupportService.insertCommentSupport(request));
     }
 
     @PostMapping("/delete")
-    public R deleteCommentSupport(@RequestBody UserSupportRequest userSupportRequest) {
-        return userSupportService.deleteCommentSupport(userSupportRequest);
+    public R<Boolean> deleteCommentSupport(@RequestBody UserSupportRequest request) {
+        return R.success(userSupportService.deleteCommentSupport(request));
     }
 }

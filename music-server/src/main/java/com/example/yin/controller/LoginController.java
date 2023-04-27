@@ -1,6 +1,7 @@
 package com.example.yin.controller;
 
 import com.example.yin.common.R;
+import com.example.yin.model.reponse.LoginUser;
 import com.example.yin.model.request.LoginRequest;
 import com.example.yin.model.request.RegisterRequest;
 import com.example.yin.service.LoginService;
@@ -22,15 +23,15 @@ public class LoginController {
     private LoginService loginService;
 
     @PostMapping("/login")
-    public R login(@Valid @RequestBody LoginRequest request) {
-        return R.success("登录成功", loginService.login(request));
+    public R<LoginUser> login(@Valid @RequestBody LoginRequest request) {
+        return R.success(loginService.login(request), "登录成功");
     }
 
     @PostMapping("/register")
-    public R register(@Valid @RequestBody RegisterRequest request) {
+    public R<Boolean> register(@Valid @RequestBody RegisterRequest request) {
         Boolean result = loginService.register(request);
         if (result) {
-            return R.success("注册成功", true);
+            return R.success(true, "注册成功");
         } else {
             return R.error("注册失败");
         }

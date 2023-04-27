@@ -13,13 +13,30 @@ public class SongList {
     @TableId(type = IdType.AUTO)
     private Integer id;
 
+    /**
+     * 标题
+     */
     private String title;
 
+    /**
+     * 图片
+     */
     private String pic;
 
+    /**
+     * 风格
+     */
     private String style;
 
+    /**
+     * 简介
+     */
     private String introduction;
+
+    /**
+     * 歌手id
+     */
+    private Integer singerId;
 
     @Override
     public String toString() {

@@ -12,9 +12,9 @@ import com.example.yin.model.request.UserSupportRequest;
  */
 public interface UserSupportService extends IService<UserSupport> {
 
-    R isUserSupportComment(UserSupportRequest userSupportRequest);
+    Boolean isUserSupportComment(UserSupportRequest userSupportRequest);
 
-    R insertCommentSupport(UserSupportRequest userSupportRequest);
+    Boolean insertCommentSupport(UserSupportRequest userSupportRequest);
 
-    R deleteCommentSupport(UserSupportRequest userSupportRequest);
+    Boolean deleteCommentSupport(UserSupportRequest userSupportRequest);
 }

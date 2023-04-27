@@ -6,19 +6,17 @@ import com.example.yin.model.domain.SongList;
 import com.example.yin.model.request.SongListRequest;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
+
 public interface SongListService extends IService<SongList> {
 
-    R addSongList(SongListRequest addSongListRequest);
+    Boolean addSongList(SongListRequest addSongListRequest);
 
-    R updateSongListMsg(SongListRequest updateSongListRequest);
+    Boolean updateSongListMsg(SongListRequest updateSongListRequest);
 
-    R updateSongListImg(MultipartFile avatorFile, int id);
+    Boolean updateSongListImg(MultipartFile avatorFile, int id);
 
-    R deleteSongList(Integer id);
+    Boolean deleteSongList(Integer id);
 
-    R allSongList();
-
-    R likeTitle(String title);
-
-    R likeStyle(String style);
+    List<SongList> getSongList(SongListRequest request);
 }

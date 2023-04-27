@@ -3,28 +3,31 @@ package com.example.yin.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.example.yin.common.R;
 import com.example.yin.model.domain.Song;
+import com.example.yin.model.reponse.TreeResponse;
 import com.example.yin.model.request.SongRequest;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
+
 public interface SongService extends IService<Song> {
 
-    R addSong (SongRequest addSongRequest,  MultipartFile mpfile);
+    Boolean addSong (SongRequest addSongRequest,  MultipartFile mpfile);
 
-    R updateSongMsg(SongRequest updateSongRequest);
+    Boolean updateSongMsg(SongRequest updateSongRequest);
 
-    R updateSongUrl(MultipartFile urlFile, int id);
+    Boolean updateSongUrl(MultipartFile urlFile, Integer id);
 
-    R updateSongPic(MultipartFile urlFile, int id);
+    Boolean updateSongPic(MultipartFile urlFile, Integer id);
 
-    R deleteSong(Integer id);
+    Boolean deleteSong(Integer id);
 
-    R allSong();
+    List<Song> allSong();
 
-    R songOfSingerId(Integer singerId);
+    List<Song> songOfSingerId(Integer singerId);
 
-    R songOfId(Integer id);
+    List<Song> songOfId(Integer id);
 
-    R songOfSingerName(String name);
+    List<Song> songOfSingerName(String name);
 
-    R songTreeOfSingerId(int singerId);
+    List<TreeResponse> songTreeOfSingerId(Integer singerId);
 }
