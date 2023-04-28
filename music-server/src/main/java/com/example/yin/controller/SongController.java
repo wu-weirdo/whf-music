@@ -48,32 +48,9 @@ public class SongController {
      *
      * @return {@code R}
      */
-    @GetMapping("/song")
-    public R<List<Song>> allSong() {
-        return R.success(songService.allSong());
-    }
-
-
-    /**
-     * 返回指定歌曲ID的歌曲
-     *
-     * @param id id
-     * @return {@code R}
-     */
-    @GetMapping("/detail")
-    public R<List<Song>> songOfId(@RequestParam Integer id) {
-        return R.success(songService.songOfId(id));
-    }
-
-    /**
-     * 返回指定歌手ID的歌曲
-     *
-     * @param singerId 歌手id
-     * @return {@code R}
-     */
-    @GetMapping("/singer/detail")
-    public R<List<Song>> songOfSingerId(@RequestParam Integer singerId) {
-        return R.success(songService.songOfSingerId(singerId));
+    @PostMapping("/list")
+    public R<List<Song>> allSong(@RequestBody SongRequest request) {
+        return R.success(songService.allSong(request));
     }
 
     /**
@@ -85,17 +62,6 @@ public class SongController {
     @GetMapping("/singer/detail/tree")
     public R<List<TreeResponse>> songTreeOfSingerId(@RequestParam Integer singerId) {
         return R.success(songService.songTreeOfSingerId(singerId));
-    }
-
-    /**
-     * 返回指定歌手名的歌曲
-     *
-     * @param name 名字
-     * @return {@code R}
-     */
-    @GetMapping("/singerName/detail")
-    public R<List<Song>> songOfSingerName(@RequestParam String name) {
-        return R.success(songService.songOfSingerName(name));
     }
 
     /**

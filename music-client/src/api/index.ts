@@ -20,7 +20,7 @@ const HttpManager = {
 
   // =======================> 歌单 API 完成
   // 获取全部歌单
-  getSongList: () => get("songList"),
+  getSongList: () => post("songList/list"),
   // 获取歌单类型
   getSongListOfStyle: (style) => get(`songList/style/detail?style=${style}`),
   // 返回标题包含文字的歌单

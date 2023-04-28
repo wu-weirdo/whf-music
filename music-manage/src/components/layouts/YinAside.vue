@@ -20,10 +20,10 @@
         <el-icon><mic /></el-icon>
         <span>歌手管理</span>
       </el-menu-item>
-      <el-menu-item index="songList">
+<!--      <el-menu-item index="songList">
         <el-icon><Document /></el-icon>
         <span>歌单管理</span>
-      </el-menu-item>
+      </el-menu-item>-->
     </el-menu>
   </div>
 </template>

@@ -1,15 +1,19 @@
 package com.example.yin.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.yin.constant.ResultEnum;
 import com.example.yin.excepetion.ServiceException;
 import com.example.yin.mapper.SingerMapper;
+import com.example.yin.mapper.SongListMapper;
 import com.example.yin.mapper.SongMapper;
 import com.example.yin.model.domain.Singer;
 import com.example.yin.model.domain.Song;
+import com.example.yin.model.domain.SongList;
 import com.example.yin.model.reponse.TreeResponse;
 import com.example.yin.model.request.SongRequest;
+import com.example.yin.service.SongListService;
 import com.example.yin.service.SongService;
 import com.example.yin.utils.ExceptionUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -17,6 +21,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
@@ -34,17 +39,26 @@ public class SongServiceImpl extends ServiceImpl<SongMapper, Song> implements So
     @Autowired
     private SingerMapper singerMapper;
 
+    @Autowired
+    private SongListMapper songListMapper;
+
     @Override
-    public List<Song> allSong() {
-        return songMapper.selectList(null);
+    public List<Song> allSong(SongRequest request) {
+        LambdaQueryWrapper<Song> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(Objects.nonNull(request.getSongListId()), Song::getSongListId, request.getSongListId());
+        wrapper.eq(Objects.nonNull(request.getSingerId()), Song::getSingerId, request.getSingerId());
+        wrapper.like(Objects.nonNull(request.getName()), Song::getName, request.getName());
+        wrapper.like(Objects.nonNull(request.getId()), Song::getId, request.getId());
+        return songMapper.selectList(wrapper);
     }
 
     @Override
     public Boolean addSong(SongRequest addSongRequest, MultipartFile mpfile) {
         Singer singer = singerMapper.selectOne(new QueryWrapper<Singer>().eq("id", addSongRequest.getSingerId()));
+        SongList songList = songListMapper.selectOne(new QueryWrapper<SongList>().eq("id", addSongRequest.getSongListId()));
         Song song = new Song();
         BeanUtils.copyProperties(addSongRequest, song);
-        String pic = "/resource/img/songPic/tubiao.jpg";
+        String pic = Optional.ofNullable(songList.getPic()).orElse("/resource/img/songPic/tubiao.jpg");
         String fileName = mpfile.getOriginalFilename();
         String singerPath = System.getProperty("user.dir") + System.getProperty("file.separator")
                 + "resource" + System.getProperty("file.separator")
@@ -148,27 +162,6 @@ public class SongServiceImpl extends ServiceImpl<SongMapper, Song> implements So
     @Override
     public Boolean deleteSong(Integer id) {
         return songMapper.deleteById(id) > 0;
-    }
-
-    @Override
-    public List<Song> songOfSingerId(Integer singerId) {
-        QueryWrapper<Song> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("singer_id", singerId);
-        return songMapper.selectList(queryWrapper);
-    }
-
-    @Override
-    public List<Song> songOfId(Integer id) {
-        QueryWrapper<Song> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("id", id);
-        return songMapper.selectList(queryWrapper);
-    }
-
-    @Override
-    public List<Song> songOfSingerName(String name) {
-        QueryWrapper<Song> queryWrapper = new QueryWrapper<>();
-        queryWrapper.like("name", name);
-        return songMapper.selectList(queryWrapper);
     }
 
     @Override

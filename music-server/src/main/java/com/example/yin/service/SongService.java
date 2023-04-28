@@ -11,7 +11,7 @@ import java.util.List;
 
 public interface SongService extends IService<Song> {
 
-    Boolean addSong (SongRequest addSongRequest,  MultipartFile mpfile);
+    Boolean addSong(SongRequest addSongRequest, MultipartFile mpfile);
 
     Boolean updateSongMsg(SongRequest updateSongRequest);
 
@@ -21,13 +21,7 @@ public interface SongService extends IService<Song> {
 
     Boolean deleteSong(Integer id);
 
-    List<Song> allSong();
-
-    List<Song> songOfSingerId(Integer singerId);
-
-    List<Song> songOfId(Integer id);
-
-    List<Song> songOfSingerName(String name);
+    List<Song> allSong(SongRequest request);
 
     List<TreeResponse> songTreeOfSingerId(Integer singerId);
 }

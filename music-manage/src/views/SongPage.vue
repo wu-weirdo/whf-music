@@ -87,7 +87,7 @@
         <el-input type="text" name="name" v-model="registerForm.name"></el-input>
       </el-form-item>
       <el-form-item label="专辑">
-        <el-input type="text" name="introduction" v-model="registerForm.introduction"></el-input>
+        <el-input type="text" name="introduction" v-model="registerForm.introduction" disabled></el-input>
       </el-form-item>
       <el-form-item label="歌词">
         <el-input type="textarea"
@@ -169,6 +169,8 @@ export default defineComponent({
     const uploadHeader = {
       Authorization : token.value
     }
+    const songListId = ref("");
+    const songListName = ref("");
 
     const isPlay = computed(() => store.getters.isPlay); // 播放状态
     const playIcon = computed(() => (isPlay.value ? ZANTING.value : BOFANG.value)); // 播放状态
@@ -191,8 +193,11 @@ export default defineComponent({
       }
     });
 
-    singerId.value = proxy.$route.query.id as string;
-    singerName.value = proxy.$route.query.name as string;
+
+    songListId.value = proxy.$route.query.id as string;
+    songListName.value = proxy.$route.query.name as string;
+    singerId.value = proxy.$route.query.singerId as string;
+    singerName.value = proxy.$route.query.singerName as string;
     proxy.$store.commit("setIsPlay", false);
     getData();
 
@@ -200,7 +205,7 @@ export default defineComponent({
     async function getData() {
       tableData.value = [];
       tempDate.value = [];
-      const result = (await HttpManager.getSongOfSingerId(singerId.value)) as ResponseBody;
+      const result = (await HttpManager.getAllSong(null, null, null, songListId.value)) as ResponseBody;
       tableData.value = result.data;
       tempDate.value = result.data;
       currentPage.value = 1;
@@ -257,12 +262,21 @@ export default defineComponent({
           name: "歌手管理",
         },
         {
-          path: RouterName.Song,
+          path: RouterName.SongList,
           query: {
             id: singerId.value,
             name: singerName.value,
           },
-          name: "歌曲信息",
+          name: "专辑管理",
+        },
+        {
+          path: RouterName.Song,
+          query: {
+            id: songListId.value,
+            singerName: singerName.value,
+            singerId: singerId.value,
+          },
+          name: "歌曲管理",
         },
         {
           path: "",
@@ -280,7 +294,7 @@ export default defineComponent({
     const registerForm = reactive({
       name: "",
       singerName: "",
-      introduction: "",
+      introduction: songListName,
       lyric: "",
     });
 
@@ -410,6 +424,7 @@ export default defineComponent({
       BOFANG,
       breadcrumbList,
       uploadHeader,
+      songListName,
       deleteAll,
       handleSelectionChange,
       handleCurrentChange,

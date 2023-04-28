@@ -47,7 +47,7 @@
           </div>
           <div class="card-right">
             <div class="card-num">{{ songListCount }}</div>
-            <div>歌单数量</div>
+            <div>专辑数量</div>
           </div>
         </div>
       </el-card>
@@ -96,7 +96,7 @@ const userSex = reactive({
           name: "男",
         },
         {
-          value: 0,
+          value: 1,
           name: "女",
         },
       ],
@@ -129,7 +129,7 @@ const singerSex = reactive({
           name: "男",
         },
         {
-          value: 0,
+          value: 1,
           name: "女",
         },
       ],
@@ -183,10 +183,10 @@ HttpManager.getAllUser().then((res) => {
   userSexChart.setOption(userSex);
 });
 
-HttpManager.getAllSong().then((res) => {
+HttpManager.getAllSong(null, null, null, null).then((res) => {
   songCount.value = (res as ResponseBody).data.length;
 });
-HttpManager.getSongList().then((res) => {
+HttpManager.getSongList(null, null).then((res) => {
   const result = res as ResponseBody;
   songListCount.value = result.data.length;
   for (let item of result.data) {

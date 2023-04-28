@@ -8,7 +8,7 @@
     <div class="handle-box">
       <el-button @click="deleteAll">批量删除</el-button>
       <el-input v-model="searchWord" placeholder="筛选关键词"></el-input>
-      <el-button type="primary" @click="centerDialogVisible = true">添加歌单</el-button>
+      <el-button type="primary" @click="centerDialogVisible = true">添加专辑</el-button>
     </div>
     <el-table height="680px" border size="16" :data="data" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="40" align="center"></el-table-column>
@@ -35,7 +35,7 @@
       <el-table-column label="操作" width="180" align="center">
         <template v-slot="scope">
           <el-row style="margin-bottom: 10px">
-            <el-button type="success" @click="goContentPage(scope.row.id)">歌曲</el-button>
+            <el-button type="success" @click="goContentPage(scope.row)">歌曲</el-button>
             <el-button @click="goCommentPage(scope.row.id)">评论</el-button>
           </el-row>
 
@@ -61,10 +61,10 @@
   <!--添加歌单-->
   <el-dialog title="添加歌单" v-model="centerDialogVisible" width="600px">
     <el-form label-width="70px" :model="registerForm">
-      <el-form-item label="歌单名" prop="title">
+      <el-form-item label="名称" prop="title">
         <el-input v-model="registerForm.title"></el-input>
       </el-form-item>
-      <el-form-item label="歌单介绍" prop="introduction">
+      <el-form-item label="简介" prop="introduction">
         <el-input v-model="registerForm.introduction" type="textarea" :rows="4"></el-input>
       </el-form-item>
       <el-form-item label="风格" prop="style">
@@ -80,13 +80,13 @@
   </el-dialog>
 
   <!-- 编辑弹出框 -->
-  <el-dialog title="编辑" v-model="editVisible">
+  <el-dialog title="编辑" v-model="editVisible" width="600px">
     <el-form :model="editForm">
-      <el-form-item label="标题">
+      <el-form-item label="名称">
         <el-input v-model="editForm.title"></el-input>
       </el-form-item>
       <el-form-item label="简介">
-        <el-input type="textarea" v-model="editForm.introduction"></el-input>
+        <el-input type="textarea" :rows="4" v-model="editForm.introduction"></el-input>
       </el-form-item>
       <el-form-item label="风格">
         <el-input v-model="editForm.style"></el-input>
@@ -128,7 +128,7 @@ export default defineComponent({
     const breadcrumbList = computed(() => store.getters.breadcrumbList);
     const token = computed(() => store.getters.token);
     const uploadHeader = {
-      Authorization : token.value
+      Authorization: token.value
     }
     const singerId = ref("");
     const singerName = ref("");
@@ -187,7 +187,7 @@ export default defineComponent({
     /**
      * 路由
      */
-    function goContentPage(id) {
+    function goContentPage(row) {
       const breadcrumbList = reactive([
         {
           path: RouterName.Singer,
@@ -195,15 +195,22 @@ export default defineComponent({
         },
         {
           path: RouterName.SongList,
+          query: {
+            id: singerId.value,
+            name: singerName.value,
+          },
           name: "专辑管理",
         },
         {
           path: "",
-          name: "专辑内容",
+          name: row.title,
         },
       ]);
       proxy.$store.commit("setBreadcrumbList", breadcrumbList);
-      routerManager(RouterName.Song, {path: RouterName.Song, query: {id}});
+      routerManager(RouterName.Song, {
+        path: RouterName.Song,
+        query: {id: row.id, name: row.title, singerId: singerId.value, singerName: singerName.value}
+      });
     }
 
     function goCommentPage(id) {
@@ -239,7 +246,7 @@ export default defineComponent({
       let title = registerForm.title;
       let introduction = registerForm.introduction;
       let style = registerForm.style;
-      const result = (await HttpManager.setSongList({title, introduction, style})) as ResponseBody;
+      const result = (await HttpManager.setSongList({title, introduction, style, singerId: singerId.value})) as ResponseBody;
       (proxy as any).$message({
         message: result.message,
         type: result.type,
