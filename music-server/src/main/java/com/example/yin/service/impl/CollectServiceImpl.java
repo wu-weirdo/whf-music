@@ -4,7 +4,9 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.yin.common.R;
 import com.example.yin.mapper.CollectMapper;
+import com.example.yin.mapper.SongMapper;
 import com.example.yin.model.domain.Collect;
+import com.example.yin.model.domain.Song;
 import com.example.yin.model.request.CollectRequest;
 import com.example.yin.service.CollectService;
 import org.springframework.beans.BeanUtils;
@@ -17,12 +19,16 @@ import java.util.List;
 public class CollectServiceImpl extends ServiceImpl<CollectMapper, Collect> implements CollectService {
     @Autowired
     private CollectMapper collectMapper;
+    @Autowired
+    private SongMapper songMapper;
 
     @Override
     public Boolean addCollect(CollectRequest addCollectRequest) {
         //作者用type来判断收藏的是歌还是歌单
         Collect collect = new Collect();
         BeanUtils.copyProperties(addCollectRequest, collect);
+        Song song = songMapper.selectById(addCollectRequest.getSongId());
+        collect.setSongListId(song.getSongListId());
         return collectMapper.insert(collect) > 0;
     }
 

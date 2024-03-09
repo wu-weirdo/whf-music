@@ -26,7 +26,7 @@ const HttpManager = {
   // 返回标题包含文字的歌单
   getSongListOfLikeTitle: (keywords) => get(`songList/likeTitle/detail?title=${keywords}`),
   // 返回歌单里指定歌单ID的歌曲
-  getListSongOfSongId: (songListId) => get(`listSong/detail?songListId=${songListId}`),
+  getListSongOfSongId: (songListId) => post(`song/list`, {songListId: songListId}),
 
   // =======================> 歌手 API  完成
   // 返回所有歌手
@@ -71,12 +71,13 @@ const HttpManager = {
   },
 
   // =======================> 歌曲 API
+  getAllSong:({id, singerId, songListId}) => post(`song/list`, {id, singerId, songListId}),
   // 返回指定歌曲ID的歌曲
-  getSongOfId: (id) => get(`song/detail?id=${id}`),
+  getSongOfId: (id) => post(`song/list`, {id: id}),
   // 返回指定歌手ID的歌曲
-  getSongOfSingerId: (id) => get(`song/singer/detail?singerId=${id}`),
+  getSongOfSingerId: (id) => post(`song/list`, {singerId: id}),
   // 返回指定歌手名的歌曲
-  getSongOfSingerName: (keywords) => get(`song/singerName/detail?name=${keywords}`),
+  getSongOfSingerName: (keywords) =>  post(`song/list`, {name: keywords}),
   // 下载音乐
   downloadMusic: (url) => get(url, { responseType: "blob" }),
 

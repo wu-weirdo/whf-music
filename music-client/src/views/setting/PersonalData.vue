@@ -63,14 +63,14 @@ export default defineComponent({
 
     async function getUserInfo(id) {
       const result = (await HttpManager.getUserOfId(id)) as ResponseBody;
-      registerForm.username = result.data[0].userName;
-      registerForm.sex = result.data[0].sex;
-      registerForm.phoneNum = result.data[0].phoneNum;
-      registerForm.email = result.data[0].email;
-      registerForm.birth = result.data[0].birth;
-      registerForm.introduction = result.data[0].introduction;
-      registerForm.location = result.data[0].location;
-      registerForm.userPic = result.data[0].avator;
+      registerForm.username = result.data.userName;
+      registerForm.sex = result.data.sex;
+      registerForm.phoneNum = result.data.phoneNum;
+      registerForm.email = result.data.email;
+      registerForm.birth = result.data.birth;
+      registerForm.introduction = result.data.introduction;
+      registerForm.location = result.data.location;
+      registerForm.userPic = result.data.avator;
     }
 
     async function saveMsg() {

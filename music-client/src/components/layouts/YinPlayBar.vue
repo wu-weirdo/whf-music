@@ -108,15 +108,21 @@ export default defineComponent({
       const type = '0'; //这里要看看 不能直接写死
       const songId = songIdVO.value;
 
-      const result = isCollection.value
-          ? ((await HttpManager.deleteCollection(userIdVO.value, songIdVO.value)) as ResponseBody)
-          : ((await HttpManager.setCollection({userId, type, songId})) as ResponseBody);
+      let result;
+      let collection: boolean;
+      if (isCollection.value) {
+        result = ((await HttpManager.deleteCollection(userIdVO.value, songIdVO.value)) as ResponseBody);
+        collection = !result.data;
+      } else {
+        result = ((await HttpManager.setCollection({userId, type, songId})) as ResponseBody);
+        collection = result.data;
+      }
       (proxy as any).$message({
         message: result.message,
         type: result.type,
       });
 
-      if (result.data == true || result.data == false) isCollection.value = result.data;
+      if (result.data == true || result.data == false) isCollection.value = collection;
     }
 
     onMounted(() => {

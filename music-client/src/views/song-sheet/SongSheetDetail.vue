@@ -62,7 +62,7 @@ export default defineComponent({
       // 获取歌单里的歌曲信息
       for (const item of result.data) {
         // 获取单里的歌曲
-        const resultSong = (await HttpManager.getSongOfId(item.songId)) as ResponseBody;
+        const resultSong = (await HttpManager.getSongOfId(item.id)) as ResponseBody;
         currentSongList.value.push(resultSong.data[0]);
       }
     }
