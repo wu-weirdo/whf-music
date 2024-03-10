@@ -2,6 +2,7 @@ package com.example.yin.constant;
 
 public class Constants {
     /* 歌曲图片，歌手图片，歌曲文件，歌单图片等文件的存放路径 */
+    public static String FILE_ROOT_PATH = "/usr/";
     public static String PROJECT_PATH = System.getProperty("user.dir") + "/resource";
     public static String IMAGES_PATH = "file:" + PROJECT_PATH + "/img/";
     public static String AVATOR_IMAGES_PATH = "file:" + PROJECT_PATH + "/img/avatorImages/";
