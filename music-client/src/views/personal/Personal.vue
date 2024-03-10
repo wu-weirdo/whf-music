@@ -9,6 +9,7 @@
       <el-button class="edit-info" round :icon="Edit" @click="goPage()">修改个人信息</el-button>
     </div>
     <div class="personal-body">
+      <div class="username">收藏列表</div>
       <song-list :songList="collectSongList" :show="true" @changeData="changeData"></song-list>
     </div>
     <el-dialog v-model="dialogTableVisible" title="修改头像">
@@ -57,11 +58,11 @@ export default defineComponent({
     }
     async function getUserInfo(id) {
       const result = (await HttpManager.getUserOfId(id)) as ResponseBody;
-      personalInfo.username = result.data[0].username;
-      personalInfo.userSex = result.data[0].sex;
-      personalInfo.birth = result.data[0].birth;
-      personalInfo.introduction = result.data[0].introduction;
-      personalInfo.location = result.data[0].location;
+      personalInfo.username = result.data.userName;
+      personalInfo.userSex = result.data.sex;
+      personalInfo.birth = result.data.birth;
+      personalInfo.introduction = result.data.introduction;
+      personalInfo.location = result.data.location;
     }
     // 获取收藏的歌曲
     async function getCollection(userId) {

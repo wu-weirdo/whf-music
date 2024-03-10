@@ -1,6 +1,6 @@
 <template>
   <div class="upload">
-    <el-upload drag :action="uploadUrl()" :show-file-list="false" :on-success="handleAvatarSuccess" :before-upload="beforeAvatarUpload">
+    <el-upload drag :action="uploadUrl()" :headers="headers" :show-file-list="false" :on-success="handleAvatarSuccess" :before-upload="beforeAvatarUpload">
       <el-icon class="el-icon--upload"><upload-filled /></el-icon>
       <div class="el-upload__text">将文件拖到此处或点击上传</div>
       <template #tip>
@@ -26,6 +26,9 @@ export default defineComponent({
 
     const uploadTypes = ref(["jpg", "jpeg", "png", "gif"]);
     const userId = computed(() => store.getters.userId);
+    const headers = {
+      'Authorization': store.getters.token
+    };
 
     function uploadUrl() {
       return HttpManager.uploadUrl(userId.value);
@@ -58,6 +61,7 @@ export default defineComponent({
     return {
       uploadTypes,
       uploadUrl,
+      headers,
       beforeAvatarUpload,
       handleAvatarSuccess,
     };

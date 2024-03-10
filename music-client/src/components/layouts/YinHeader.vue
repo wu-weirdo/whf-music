@@ -20,6 +20,7 @@
         </el-dropdown-menu>
       </template>
     </el-dropdown>
+    <div class="user-name" v-if="token">{{ userName }}</div>
   </div>
 </template>
 
@@ -52,6 +53,7 @@ export default defineComponent({
     });
     const keywords = ref("");
     const activeNavName = computed(() => store.getters.activeNavName);
+    const userName = computed(() => store.getters.username);
     const userPic = computed(() => store.getters.userPic);
     const token = computed(() => store.getters.token);
 
@@ -95,6 +97,7 @@ export default defineComponent({
       keywords,
       activeNavName,
       userPic,
+      userName,
       token,
       Search,
       goPage,
@@ -190,5 +193,11 @@ export default defineComponent({
     margin-right: $header-user-margin;
     cursor: pointer;
   }
+}
+
+.user-name {
+  position: relative;
+  display: flex;
+  align-items: center;
 }
 </style>

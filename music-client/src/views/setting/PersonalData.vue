@@ -82,14 +82,14 @@ export default defineComponent({
 
 
       const id = userId.value;
-      const username = registerForm.username;
+      const userName = registerForm.username;
       const sex = registerForm.sex;
       const phoneNum = registerForm.phoneNum;
       const email = registerForm.email;
       const birth = registerForm.birth;
       const introduction = registerForm.introduction;
       const location = registerForm.location;
-      const result = (await HttpManager.updateUserMsg({id,username,sex,phoneNum,email,birth,introduction,location})) as ResponseBody;
+      const result = (await HttpManager.updateUserMsg({id,userName,sex,phoneNum,email,birth,introduction,location})) as ResponseBody;
       (proxy as any).$message({
         message: result.message,
         type: result.type,

@@ -35,7 +35,7 @@ export default defineComponent({
       confirmPassword: "",
     });
     const userId = computed(() => store.getters.userId);
-    const userName = computed(() => store.getters.username);
+    const username = computed(() => store.getters.username);
 
     const validateCheck = (rule: any, value: any, callback: any) => {
       if (value === "") {
@@ -67,11 +67,11 @@ export default defineComponent({
 
 
       const id = userId.value;
-      const username = userName.value;
+      const userName = username.value;
       const oldPassword = form.oldPassword;
       const password = form.newPassword;
 
-      const result = (await HttpManager.updateUserPassword({id,username,oldPassword,password})) as ResponseBody;
+      const result = (await HttpManager.updateUserPassword({id,userName,oldPassword,password})) as ResponseBody;
       (proxy as any).$message({
         message: result.message,
         type: result.type,

@@ -59,6 +59,7 @@ export default defineComponent({
           proxy.$store.commit("setUserId", result.data.user.id);
           proxy.$store.commit("setUsername", result.data.user.userName);
           proxy.$store.commit("setUserPic", result.data.user.avator);
+          proxy.$store.commit("setUserIntroduction", result.data.user.introduction);
           proxy.$store.commit("setToken", result.data.token);
           changeIndex(NavName.Home);
           routerManager(RouterName.Home, { path: RouterName.Home });

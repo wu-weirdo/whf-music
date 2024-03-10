@@ -4,7 +4,7 @@ module.exports = defineConfig({
   chainWebpack: config => {
     config.plugin('define').tap(definitions => {
         Object.assign(definitions[0]['process.env'], {
-          NODE_HOST: '"http://localhost:8888"',
+          NODE_HOST: '"http://47.96.95.29/api"',
           //   NODE_HOST: '"https://music-backend.onlyicanstopmyself.top"',
         });
         return definitions;

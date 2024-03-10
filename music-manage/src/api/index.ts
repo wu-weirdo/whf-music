@@ -9,7 +9,7 @@ const HttpManager = {
 
     // =======================> 用户 API 完成
     // 返回所有用户
-    getAllUser: () => get(`user`),
+    getAllUser: () => get(`user/list`),
     // 返回指定ID的用户
     getUserOfId: (id) => get(`user/detail?id=${id}`),
     // 删除用户

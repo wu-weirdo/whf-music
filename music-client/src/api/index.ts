@@ -11,8 +11,8 @@ const HttpManager = {
   // 删除用户
   deleteUser: (id) => get(`user/delete?id=${id}`),
   // 更新用户信息
-  updateUserMsg: ({id,username,sex,phoneNum,email,birth,introduction,location}) => post(`user/update`, {id,username,sex,phoneNum,email,birth,introduction,location}),
-  updateUserPassword: ({id,username,oldPassword,password}) => post(`user/updatePassword`, {id,username,oldPassword,password}),
+  updateUserMsg: ({id,userName,sex,phoneNum,email,birth,introduction,location}) => post(`user/update`, {id,userName,sex,phoneNum,email,birth,introduction,location}),
+  updateUserPassword: ({id,userName,oldPassword,password}) => post(`user/updatePassword`, {id,userName,oldPassword,password}),
   // 返回指定ID的用户
   getUserOfId: (id) => get(`user/detail?id=${id}`),
   // 更新用户头像
