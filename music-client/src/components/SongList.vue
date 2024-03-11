@@ -14,7 +14,7 @@
                   :icon="Download"
                   @click="
                     downloadMusic({
-                      songUrl: scope.row.url,
+                      songId: scope.row.id,
                       songName: scope.row.name,
                     })
                   ">下载</el-dropdown-item>

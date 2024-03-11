@@ -49,7 +49,7 @@
             :icon="iconList.download"
             @click="
             downloadMusic({
-              songUrl,
+              songId,
               songName: singerName + '-' + songTitle,
             })
           "

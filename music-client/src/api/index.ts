@@ -79,7 +79,7 @@ const HttpManager = {
   // 返回指定歌手名的歌曲
   getSongOfSingerName: (keywords) =>  post(`song/list`, {name: keywords}),
   // 下载音乐
-  downloadMusic: (url) => get(url, { responseType: "blob" }),
+  downloadMusic: (songId) => get(`download/song?songId=${songId}`, { responseType: "blob" }),
 
   //======================> 点赞api的优化 避免有些是重复的点赞！新增数据表了得
 

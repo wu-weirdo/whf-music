@@ -71,7 +71,7 @@ export default defineComponent({
           // 获取评论用户的昵称和头像
           const resultUser = (await HttpManager.getUserOfId(commentList.value[index].userId)) as ResponseBody;
           commentList.value[index].avator = resultUser.data.avator;
-          commentList.value[index].username = resultUser.data.username;
+          commentList.value[index].username = resultUser.data.userName;
         }
       } catch (error) {
         console.error(error);

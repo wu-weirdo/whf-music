@@ -63,17 +63,17 @@ export default function () {
   }
 
   // 下载
-  async function downloadMusic({ songUrl, songName }) {
-    if (!songUrl) {
+  async function downloadMusic({ songId, songName }) {
+    if (!songId) {
       (proxy as any).$message({
-        message: "下载链接为空！",
+        message: "文件id为空！",
         type: "error",
       });
       console.error("下载链接为空！");
       return;
     }
 
-    const result = (await HttpManager.downloadMusic(songUrl)) as ResponseBody;
+    const result = (await HttpManager.downloadMusic(songId)) as ResponseBody;
     const eleLink = document.createElement("a");
     eleLink.download = `${songName}.mp3`;
     eleLink.style.display = "none";
