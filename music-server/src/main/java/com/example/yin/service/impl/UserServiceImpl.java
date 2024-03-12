@@ -59,7 +59,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
     }
 
     @Override
-    public Boolean updateUserAvator(MultipartFile avatorFile, int id) {
+    public String updateUserAvator(MultipartFile avatorFile, int id) {
         String fileName = System.currentTimeMillis() + avatorFile.getOriginalFilename();
         //路径 他这个会根据你的系统获取对应的文件分隔符
         String filePath = Constants.PROJECT_PATH + System.getProperty("file.separator") + "img" + System.getProperty("file.separator") + "avatorImages";
@@ -79,7 +79,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         User user = new User();
         user.setId(id);
         user.setAvator(imgPath);
-        return userMapper.updateById(user) > 0;
+        userMapper.updateById(user);
+        return imgPath;
     }
 
     @Override

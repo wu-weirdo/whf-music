@@ -65,7 +65,7 @@ public class UserController {
      * 更新用户头像
      */
     @PostMapping("/avatar/update")
-    public R<Boolean> updateUserPic(@RequestParam("file") MultipartFile avatorFile, @RequestParam("id") int id) {
-        return R.success(userService.updateUserAvator(avatorFile, id));
+    public R<String> updateUserPic(@RequestParam("file") MultipartFile avatorFile, @RequestParam("id") int id) {
+        return R.success(userService.updateUserAvator(avatorFile, id), "更新成功");
     }
 }

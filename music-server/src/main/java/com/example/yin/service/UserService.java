@@ -12,7 +12,7 @@ public interface UserService extends IService<User> {
 
     Boolean updateUserMsg(UserRequest updateRequest);
 
-    Boolean updateUserAvator(MultipartFile avatorFile, int id);
+    String updateUserAvator(MultipartFile avatorFile, int id);
 
     Boolean updatePassword(UserRequest updatePasswordRequest);
 
