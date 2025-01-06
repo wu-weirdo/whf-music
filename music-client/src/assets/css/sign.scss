@@ -30,11 +30,11 @@
     font-size: 20px;
     font-weight: 600;
   }
+}
 
-  .sign-btn:deep(.el-form-item__content) {
-    @include layout(space-between);
-    button {
-      width: 50%;
-    }
+.sign-btn:deep(.el-form-item__content) {
+  @include layout(space-between);
+  button {
+    width: 50%;
   }
 }
